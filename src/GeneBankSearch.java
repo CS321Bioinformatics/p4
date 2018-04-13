@@ -28,6 +28,7 @@ public class GeneBankSearch{
 				query = new File(args[2]);
 				
 				
+				
 			}
 		}
 		
