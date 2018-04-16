@@ -10,4 +10,12 @@ public class TreeObject {
 	//
 	
 	//Linked List or ArrayList of tree objects
+	private long dnaString;
+	private int frequency;
+	
+	
+	public TreeObject(long dna){
+		frequency = 0;
+		dnaString = dna;
+	}
 }
