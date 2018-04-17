@@ -47,7 +47,7 @@ public class GeneBankCreateBTree throws FileNotFoundException{
 							}
 							if (isValid) {
 								//convert string to long
-								long sequence = makeSequence(currString);
+								long sequence = convertGBKtoSubseq(currString);
 								//make tree object
 								TreeObject newObj = new TreeObject(sequence);
 								//is this going to be added to a nod here or inside of BTree class?
