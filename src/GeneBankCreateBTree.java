@@ -11,6 +11,8 @@ public class GeneBankCreateBTree throws FileNotFoundException{
 		int cacheFlag, degree, seqLength, cacheSize, debugLevel;
 		String gbkFileName;
 		File gbk;
+		Scanner scan;
+		String line;
 		
 		if ((args.length == 0) || (args.length < 4 || args.length > 6)) { //verify correct amount of args
 			printUsage();
@@ -25,13 +27,38 @@ public class GeneBankCreateBTree throws FileNotFoundException{
 				cacheFlag = Integer.parseInt(args[0]);
 				degree = Integer.parseInt(args[1]);
 				seqLength = Integer.parseInt(args[3]);
-				
-				
-
 				gbk = new File(args[2]);
 				
-				//Parse File
+				BTreeNode tree = new BTreeNod
 				
+				//Parse File
+				scan = new Scanner(gbk);
+				while(scan.hasNextLine()) {
+					line = scan.nextLine();
+					if(line.substring(0,5).equals("ORIGIN")) {
+						int index = 0;
+						while((index + seqLength) < line.length()) {
+							String currString = line.substring(index,seqLength);
+							boolean isValid = true;
+							for(int i = 0; i < currString.length; i++) {
+								if(currString.charAt(i) == ' ' || currString.charAt(i) == 'n' || currString.charAt(i) == '\n') {
+									isValid = false;
+								}
+							}
+							if (isValid) {
+								//convert string to long
+								long sequence = makeSequence(currString);
+								//make tree object
+								TreeObject newObj = new TreeObject(sequence);
+								//is this going to be added to a nod here or inside of BTree class?
+								//add object to current node or new node
+								//add node to tree if necessary
+								
+							}
+						}
+					}
+						
+				}
 				
 			}
 		}
