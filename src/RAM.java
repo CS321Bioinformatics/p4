@@ -2,7 +2,7 @@ package src;
 
 public class RAM {
 
-    //TODO Converts DNA substrings for GeneBankCreate driver
+    //TODO Converts DNA substrings from file for GeneBankSearch driver
 
     public long getKey() {
         return key;
@@ -17,26 +17,54 @@ public class RAM {
     {
         input = input.toUpperCase();
         long key = 0x00000000;
+        int tbits = 0x0;
+        int position = 0;
+        char c;
         for(int i = 0; i<input.length(); i++){
             //convert String char to 0,1,2,3
-            //switch statements
-
-            //key |= position(position = tbits << 2i)
+            c=input.charAt(i);
+            switch (c){
+                case 'A':
+                    tbits = 0;
+                case 'C':
+                    tbits = 1;
+                case 'T':
+                    tbits = 3;
+                case 'G':
+                    tbits = 2;
+            }
+            // sequence: "ACTG" = 0x00|01|11|10
+            position = (tbits << (2*i));
+            key |= position;
         }
-
-
-
         return key;
-
     }
 
 
-    public long convertLongtoString(Long input, int length)
+    public String convertLongtoString(Long input, int length)
     {
-        String convert;
+        String result = ""; //append to end
         long temp;
 
-        return input;
+        for(int i = 0; i<length; i++){ //get 2 bits from string
+            temp = key;
+            temp = (temp>>(2*i)); //normalize
+            temp &= 0x03; //isolate 2 bits, and clear padded 0's
+            if(temp == 00){ //A
+                result+="a";
+            }
+            else if(temp == 01){ //C
+                result+="c";
+            }
+            else if(temp == 11){ //T
+                result+="t";
+            }
+            else if(temp == 10){ //G
+                result+="g";
+            }
+        }
+
+        return result;
 
     }
 

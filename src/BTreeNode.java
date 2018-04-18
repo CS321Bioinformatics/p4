@@ -1,5 +1,8 @@
 package src;
 
+
+import java.util.ArrayList;
+
 public class BTreeNode {
     //TODO A B-Tree node class
 	
@@ -23,7 +26,7 @@ public class BTreeNode {
 		//new node location method in RAM class??
 		nodeLocation = 0;
 		
-		parent = null;
+//		parent = null;
 		
 		
 		

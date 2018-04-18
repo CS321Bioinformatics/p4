@@ -1,10 +1,11 @@
+package src;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-package src;
 
-public class GeneBankCreateBTree throws FileNotFoundException{
+
+public class GeneBankCreateBTree {
   //TODO Driver class to create a BTree file from a given gbk file	
 	//args format: <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]
 	public static void main(String[] args) {
@@ -29,7 +30,7 @@ public class GeneBankCreateBTree throws FileNotFoundException{
 				seqLength = Integer.parseInt(args[3]);
 				gbk = new File(args[2]);
 				
-				BTreeNode tree = new BTreeNod
+//				BTreeNode tree = new BTreeNode();
 				
 				//Parse File
 				scan = new Scanner(gbk);
@@ -40,16 +41,16 @@ public class GeneBankCreateBTree throws FileNotFoundException{
 						while((index + seqLength) < line.length()) {
 							String currString = line.substring(index,seqLength);
 							boolean isValid = true;
-							for(int i = 0; i < currString.length; i++) {
+							for(int i = 0; i < currString.length(); i++) {
 								if(currString.charAt(i) == ' ' || currString.charAt(i) == 'n' || currString.charAt(i) == '\n') {
 									isValid = false;
 								}
 							}
 							if (isValid) {
 								//convert string to long
-								long sequence = convertGBKtoSubseq(currString);
+//								long sequence = convertGBKtoSubseq(currString);
 								//make tree object
-								TreeObject newObj = new TreeObject(sequence);
+//								TreeObject newObj = new TreeObject(sequence);
 								//is this going to be added to a nod here or inside of BTree class?
 								//add object to current node or new node
 								//add node to tree if necessary
@@ -60,8 +61,10 @@ public class GeneBankCreateBTree throws FileNotFoundException{
 						
 				}
 				
-			}
-		}
+			} catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
 		
 	}
 	
