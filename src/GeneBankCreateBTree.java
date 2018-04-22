@@ -89,9 +89,10 @@ public class GeneBankCreateBTree {
 				
             }
             }
-        }
 		System.out.println(DNA);
 		return 0;
+        }
+		
 	}
 	
 	public static void printUsage() {
