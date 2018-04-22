@@ -65,7 +65,7 @@ public class GeneBankCreateBTree {
             	DNA = totalDNA.toString();
             	int index = 0;
 				while((index + seqLength) < DNA.length()) {
-					String currString = DNA.substring(index,seqLength);
+					String currString = DNA.substring(index,index + seqLength);
 					boolean isValid = true;
 					for(int i = 0; i < currString.length(); i++) {
 						if(currString.charAt(i) == 'n') {
@@ -73,20 +73,25 @@ public class GeneBankCreateBTree {
 						}
 					}
 					if (isValid) {
-								//convert string to long
+							//convert currString to long
 //								long sequence = convertGBKtoSubseq(currString);
-								//make tree object
+							//make tree object
 //								TreeObject newObj = new TreeObject(sequence);
-								//is this going to be added to a nod here or inside of BTree class?
-								//add object to current node or new node
-								//add node to tree if necessary
+							//search for object
+								//if found increment freq
+								//else insert
+									//either into and existing node or a new node
+							
 								
 					}
 				}
+				//output dump or poop
+				
             }
             }
         }
-		
+		System.out.println(DNA);
+		return 0;
 	}
 	
 	public static void printUsage() {
