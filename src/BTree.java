@@ -1,5 +1,8 @@
 package src;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class BTree {
     //TODO data structure to store TreeObjects
 	
@@ -11,6 +14,7 @@ public class BTree {
 	private int degree;
 	private RAM ram;
 	private BTreeNode root;
+	private ArrayList<TreeObject> btreeList = new ArrayList<TreeObject>();
 	
 /*
     BST-Insert(T,z) is to insert a node z to a binary search tree T,
@@ -31,4 +35,21 @@ public class BTree {
     12.         then left[y] <-- z
     13.         else right[y] <-- z
 */
+
+
+    public int getParent(ArrayList<TreeObject> btreeList, BTreeNode node){
+    	int parent = (btreeList.indexOf(node)-1)/2;
+    	return parent;
+	}
+	public void bstInsert(ArrayList<TreeObject> btreeList, BTreeNode node){
+		btreeList.set(getParent(btreeList,node),null);
+
+	}
+
+	//public Boolean bstSearch(){ To determine
+    //
+	//}
+
+	public
+
 }
