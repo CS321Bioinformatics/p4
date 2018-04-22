@@ -95,7 +95,7 @@ public class GeneBankCreateBTree {
 		
 	}
 	
-	public static void printUsage() {
+	public void printUsage() {
 		System.out.println("Expected Format for arguments: <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
 	}
 }
