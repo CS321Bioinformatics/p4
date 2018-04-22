@@ -12,8 +12,11 @@ public class GeneBankCreateBTree {
 		int cacheFlag, degree, seqLength, cacheSize, debugLevel;
 		String gbkFileName;
 		File gbk;
-		Scanner scan;
-		String line;
+		Scanner lineScan, charScan;
+		String line, DNA;
+		StringBuilder totalDNA = new StringBuilder();
+		char token;
+		boolean readLine = false ;
 		
 		if ((args.length == 0) || (args.length < 4 || args.length > 6)) { //verify correct amount of args
 			printUsage();
@@ -33,20 +36,43 @@ public class GeneBankCreateBTree {
 //				BTreeNode tree = new BTreeNode();
 				
 				//Parse File
-				scan = new Scanner(gbk);
-				while(scan.hasNextLine()) {
-					line = scan.nextLine();
+				lineScan = new Scanner(gbk);
+				while(lineScan.hasNextLine()) {
+					line = lineScan.nextLine();
+					
 					if(line.substring(0,5).equals("ORIGIN")) {
-						int index = 0;
-						while((index + seqLength) < line.length()) {
-							String currString = line.substring(index,seqLength);
-							boolean isValid = true;
-							for(int i = 0; i < currString.length(); i++) {
-								if(currString.charAt(i) == ' ' || currString.charAt(i) == 'n' || currString.charAt(i) == '\n') {
-									isValid = false;
-								}
+						readLine = true;
+					}else if(line.substring(0,5).equals("//")) {
+						readLine = false;
+					}
+					if(readline) {
+						charScan = new Scanner(line);
+						while (charScan.hasNext()) {
+							token = charScan.Next();
+							if (token != '\n' || 1token.isDigit() || token != ' ') {
+								totalDNA.append(token);
 							}
-							if (isValid) {
+						}
+						charScan.close();
+					}
+					
+				}
+				lineScan.close(); 
+				
+			} catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } finally {
+            	DNA = totalDNA.toString();
+            	int index = 0;
+				while((index + seqLength) < DNA.length()) {
+					String currString = DNA.substring(index,seqLength);
+					boolean isValid = true;
+					for(int i = 0; i < currString.length(); i++) {
+						if(currString.charAt(i) == 'n') {
+							isValid = false;
+						}
+					}
+					if (isValid) {
 								//convert string to long
 //								long sequence = convertGBKtoSubseq(currString);
 								//make tree object
@@ -55,14 +81,9 @@ public class GeneBankCreateBTree {
 								//add object to current node or new node
 								//add node to tree if necessary
 								
-							}
-						}
 					}
-						
 				}
-				
-			} catch (FileNotFoundException e) {
-                e.printStackTrace();
+            }
             }
         }
 		

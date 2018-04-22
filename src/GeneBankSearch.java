@@ -40,7 +40,7 @@ public class GeneBankSearch{
 
 //				Scanner sc = new Scanner(query);
 //				while(sc.hasNext())
-//				{
+//				{,
 //
 //					String line = sc.nextLine();
 //					long data = ram.convertGBKtoSubseq(line);
