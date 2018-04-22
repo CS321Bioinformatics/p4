@@ -13,7 +13,7 @@ public class BTreeNode {
 	private int numObjects;
 	private boolean isLeaf;
 	private int nodeLocation;
-	private ArrayList<TreeObject> objectList; //maybe linked list so shifting not needed when splitting?
+	private ArrayList<TreeObject> objectList;
 	private int parent, leftChild, rightChild;
 	
 	//default (root)

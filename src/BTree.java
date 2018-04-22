@@ -8,6 +8,10 @@ public class BTree {
 	//key
 	//location of root
 	
+	private int degree;
+	private RAM ram;
+	private BTreeNode root;
+	
 /*
     BST-Insert(T,z) is to insert a node z to a binary search tree T,
     where key[z] = v, left[z] = right[z] = p[z] = nil initially.
