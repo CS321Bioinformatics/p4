@@ -49,7 +49,7 @@ public class GeneBankCreateBTree {
 						charScan = new Scanner(line);
 						while (charScan.hasNext()) {
 							token = charScan.Next();
-							if (token != '\n' || 1token.isDigit() || token != ' ') {
+							if (token != '\n' || !token.isDigit() || token != ' ') {
 								totalDNA.append(token);
 							}
 						}
