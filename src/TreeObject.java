@@ -25,6 +25,12 @@ public class TreeObject {
 		this.frequency++;
 	}
 
+	public int compareTo(TreeObject obj){
+		if(this.dnaString > obj.dnaString){return 0;}
+		else if(this.dnaString < obj.dnaString){return -1;}
+		else return 1;
+	}
+
 	//Constructors
 	public TreeObject(long dnaString){
 		this.frequency = 0;

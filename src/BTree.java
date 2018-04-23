@@ -15,7 +15,7 @@ public class BTree {
 	private RAM ram;
 	private BTreeNode root;
 	private ArrayList<TreeObject> btreeList = new ArrayList<TreeObject>();
-	
+
 /*
     BST-Insert(T,z) is to insert a node z to a binary search tree T,
     where key[z] = v, left[z] = right[z] = p[z] = nil initially.
@@ -37,19 +37,29 @@ public class BTree {
 */
 
 
-    public int getParent(ArrayList<TreeObject> btreeList, BTreeNode node){
-    	int parent = (btreeList.indexOf(node)-1)/2;
-    	return parent;
-	}
-	public void bstInsert(ArrayList<TreeObject> btreeList, BTreeNode node){
-		btreeList.set(getParent(btreeList,node),null);
+//    int parent = (btreeList.indexOf(node)-1)/2;
 
+	public void bstInsert(long key){
+//		btreeList.set((btreeList.indexOf(node)-1)/2,null);
+		BTreeNode insertRoot = root;
+        int n = insertRoot.getNode();
+        TreeObject obj = new TreeObject(key);
+        while (n>0 && obj.compareTo(insertRoot.getKey(n-1))<0){
+            n--;
+        }
+        if(obj.compareTo(insertRoot.getKey(n-1)) == 1){
+            insertRoot.getKey(n-1).incrementFrequency();
+        }
+//        else{
+//            BTreeNode node = new BTreeNode();
+//            insert node into list data structure in TreeNodeClass
+//        }
 	}
 
 	//public Boolean bstSearch(){ To determine
     //
 	//}
 
-	public
+
 
 }

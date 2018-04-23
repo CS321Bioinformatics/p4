@@ -13,29 +13,32 @@ public class BTreeNode {
 	private int numObjects;
 	private boolean isLeaf;
 	private int nodeLocation;
-	private ArrayList<TreeObject> objectList;
-	private int parent, leftChild, rightChild;
+	private ArrayList<Long> objectList;
+	private ArrayList<TreeObject> keyList;
+	private int parent, leftChild, rightChild, node;
 	
 	//default (root)
-	public BTreeNode(TreeObject obj){
-		int numObjects = 1;	
-		objectList = new ArrayList<TreeObject>();
-		objectList.add(obj);
-		
+	public BTreeNode(){
+		int numObjects = 1;
+		nodeLocation = 0;
+		parent = (nodeLocation-1)/2;
+		keyList = new ArrayList<TreeObject>();
+		objectList = new ArrayList<Long>();
+
+
+//		objectList.add(obj);
 		//how to get/set this nodes location
 		//new node location method in RAM class??
-		nodeLocation = 0;
-		
-//		parent = null;
+
 		
 		
 		
 		
 	}
 	//if not root
-	public BTreeNode(TreeObject obj, BTreeNode parentNode){
-		int numObjects = 1;	
-		objectList = new ArrayList<TreeObject>();
+	public BTreeNode(Long obj, BTreeNode parentNode){
+		int numObjects = 1;
+		objectList = new ArrayList<Long>();
 		objectList.add(obj);
 		
 		//how to get/set this nodes location
@@ -48,7 +51,13 @@ public class BTreeNode {
 		
 		
 	}
-	
+	public TreeObject getKey(int key){
+		TreeObject obj = keyList.get(key);
+		return obj;
+	}
+	public int getNode(){
+		return node;
+	}
 	public int getLocation() {
 		return nodeLocation;
 	}
