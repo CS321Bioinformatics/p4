@@ -9,9 +9,9 @@ public class TreeObject {
 
 
 	//Linked List or ArrayList of tree objects
-	private long dnaString;
-	private int frequency;
-
+	public long dnaString;
+	public int frequency;
+	public boolean isLeaf;
 
 	public long getDnaString() {
 		return dnaString;
@@ -35,9 +35,11 @@ public class TreeObject {
 	public TreeObject(long dnaString){
 		this.frequency = 0;
 		this.dnaString = dnaString;
+		isLeaf = false;
 	}
 	public TreeObject(long dnaString, int frequency){
 		this.frequency = frequency;
 		this.dnaString = dnaString;
+		isLeaf = false;
 	}
 }
