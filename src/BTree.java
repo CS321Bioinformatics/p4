@@ -1,10 +1,12 @@
 package src;
-
+import static java.lang.Math.toIntExact;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+
+import static java.lang.StrictMath.toIntExact;
 
 public class BTree {
     //TODO data structure to store TreeObjects
@@ -108,6 +110,27 @@ public class BTree {
 	}
     //TODO Page 494
     private void BTreeSplitChild(BTreeNode newNode, int i) {
+        //"Cut(Node) and Paste(Node)"
+//      1 BTreeNode z = AllocateNode();
+//      2  BTreeNode y = Math.toIntExact(newNode.children.get(i));
+//        3 ́:leaf D y:leaf
+//        4  ́:nDt 1
+//        5 forjD1tot 1
+//        6  ́:keyj D y:keyjCt
+//        7 if not y:leaf
+//        8 for j D 1 to t
+//        9  ́:cj Dy:cjCt
+//        10 y:nDt 1
+//        11 forjDx:nC1downtoiC1
+//        12 x:cjC1 Dx:cj
+//        13 x:ciC1D ́
+//        14 forjDx:ndowntoi
+//        15 x:keyjC1 D x:keyj
+//        16 x.key_i D y.key_t
+//        17 x.n = (x.n)+1
+//        18 DISK-WRITE(y)
+//        19 DISK-WRITE(z)
+//        20 DISK-WRITE(x)
 
     }
     //TODO Page 496
