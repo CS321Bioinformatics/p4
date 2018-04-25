@@ -1,4 +1,4 @@
-package src;
+//package src;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -17,6 +17,8 @@ public class GeneBankCreateBTree {
 		StringBuilder totalDNA = new StringBuilder();
 		String token;
 		boolean readLine = false ;
+		RAM ram = new RAM();
+		BTree btree = new BTree();
 
 		if ((args.length == 0) || (args.length < 4 || args.length > 6)) { //verify correct amount of args
 			//printUsage();
@@ -43,7 +45,6 @@ public class GeneBankCreateBTree {
 					
 					if(line.substring(0,2) == ("//")) {
 						readLine = false;
-						break;
 					}else if(line.substring(0,6).equals("ORIGIN")) {
 						readLine = true;
 						line = lineScan.nextLine();
@@ -69,7 +70,7 @@ public class GeneBankCreateBTree {
 			} finally {
 				DNA = totalDNA.toString();
 				int index = 0;
-				while((index + seqLength) < DNA.length()) {
+				while((index + seqLength) <= DNA.length()) {
 					String currString = DNA.substring(index,index + seqLength);
 					boolean isValid = true;
 					for(int i = 0; i < currString.length(); i++) {
@@ -79,19 +80,19 @@ public class GeneBankCreateBTree {
 					}
 					if (isValid) {
 						//convert currString to long
-						//								long sequence = convertGBKtoSubseq(currString);
+						long sequence = ram.convertGBKtoSubseq(currString);
 						//make tree object
-						//								TreeObject newObj = new TreeObject(sequence);
+						btree.bstInsert(sequence);
 						//search for object
 						//if found increment freq
 						//else insert
 						//either into and existing node or a new node
-					System.out.println(currString);	
+					//System.out.println(currString);
 					}
 					index++;
 				}
 				//output dump or poop
-				System.out.println("done");
+				//System.out.println("done");
 				System.exit(0);
 			}
 			

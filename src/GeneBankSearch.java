@@ -38,15 +38,14 @@ public class GeneBankSearch{
 
 				System.out.println(tempForPrint);
 
-//				Scanner sc = new Scanner(query);
-//				while(sc.hasNext())
-//				{,
-//
-//					String line = sc.nextLine();
-//					long data = ram.convertGBKtoSubseq(line);
-//					tempForPrint = ram.convertLongtoString(data,4);
-//					System.out.println(data);
-//				}
+				Scanner sc = new Scanner(query);
+				while(sc.hasNext())
+				{
+					String line = sc.nextLine();
+					long data = ram.convertGBKtoSubseq(line);
+					tempForPrint = ram.convertLongtoString(data,4);
+					System.out.println(data);
+				}
 
 
 				
