@@ -1,8 +1,7 @@
 package src;
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.util.ArrayList;
+
 
 public class BTree {
     //TODO data structure to store TreeObjects
@@ -13,10 +12,9 @@ public class BTree {
 	//location of root
 	public RandomAccessFile raf;
 	private int degree;
-	private RAM ram;
-	public BTreeNode root, nodeSize;
-	private ArrayList<TreeObject> btreeList = new ArrayList<TreeObject>();
+	public BTreeNode root;
 	private File file;
+
 //    long offset;
 
 
@@ -25,14 +23,27 @@ public class BTree {
 
 
 	
-	public void BTree(int deg) throws IOException {
+	public BTree(int deg ,String fileName) {
 		if (deg == 0) {
-			nodeSize = optimal();
+			degree = optimal();
 		}else {
 			degree = deg;
 		}
-        
-        
+
+
+		root = new BTreeNode();
+        root.setNumKeys(0);
+        root.offset = 0;//root.getOffset();
+        root.isLeaf=true;
+
+        try {
+            file = new File("filename");
+            raf = new RandomAccessFile(file, "rw");
+        }
+        catch (Exception e){
+            System.err.println("Error creating file");
+        }
+
     }
 	
 	
@@ -51,6 +62,7 @@ public class BTree {
         x.setNumKeys(0);
 
 //      TODO  DiskWrite(x);
+
         T.root = x;
 
     }
@@ -63,6 +75,11 @@ public class BTree {
     //TODO Page 495
 	public void BTreeInsert(BTree T, long key) throws IOException {
 		BTreeNode r = T.root;
+		int i;
+//        for (i = 0;i<10;i++){
+//           writeToFile(r,i);
+//
+//        }
 		//the root node r is full
 		if(r.numKeys() == 2*degree-1){
 		    BTreeNode newNode = AllocateNode();
@@ -76,6 +93,10 @@ public class BTree {
         }
         else{
             BTreeInsertNonFull(r,key);
+            for(i = 0; i<r.children.size();i++){
+                writeToFile(r,i);
+            }
+
         }
 	}
     //TODO Page 494
@@ -118,28 +139,46 @@ public class BTree {
         int i = newNode.numKeys();
         TreeObject obj = new TreeObject(key);
         if(newNode.isLeaf){
-            //handle the case in which x is a leaf node by inserting key k into x.
-            while(i>=1 && (key < obj.compareTo(newNode.getKey(i)))){
-                newNode.insertKey(newNode.getKey(i),i+1);
-                i--;
+            if(newNode.numKeys != 0) {
+                System.out.println(key);
+                //handle the case in which x is a leaf node by inserting key k into x.
+                while (i >= 1 && obj.compareTo(newNode.getKey(i - 1))) {
+                    newNode.insertKey(newNode.getKey(i-1), i);
+                    i--;
+                }
             }
-            newNode.insertKey(newNode.getKey(i),i+1); //x.key_i+1 = k
+            //if frequency
+//            else{
+//                newNode.keyList.add(i,obj);
+//            }
+            newNode.insertKey(obj,i); //x.key_i+1 = k
             newNode.setNumKeys(newNode.numKeys()+1);
             DiskWrite(newNode);
         }
         else{
-            while(i>=1 && (key < obj.compareTo(newNode.getKey(i)))){
+            while(i>=1 && obj.compareTo(newNode.getKey(i))){
                 i--;
             }
             i++;
             DiskRead(newNode.children.get(i));
             if(newNode.children.get(i) == 2*degree-1){
-                BTreeSplitChild(newNode,i,newNode.keyList.get());
+//                BTreeSplitChild(newNode,i,newNode.keyList.get(i));
                 if(key > newNode.children.get(i)){
                     i++;
                 }
             }
             BTreeInsertNonFull(newNode,key); //TODO replace w/ child of newNode instead(?)
+        }
+    }
+
+    public void writeToFile(BTreeNode nodeToWrite, int i) throws FileNotFoundException {//, String filename
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream("dump"), "utf-8"))) {
+            writer.write(nodeToWrite.keyList.get(i).toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

@@ -17,7 +17,7 @@ public class RAM {
     {
         input = input.toUpperCase();
         long key = 0x00000000;
-        int tbits = 0x0;
+        int tbits = 0b0;
         int position = 0;
         char c;
         for(int i = 0; i<input.length(); i++){
@@ -26,16 +26,20 @@ public class RAM {
             switch (c){
                 case 'A':
                     tbits = 0;
+                    break;
                 case 'C':
                     tbits = 1;
+                    break;
                 case 'T':
                     tbits = 3;
+                    break;
                 case 'G':
                     tbits = 2;
+                    break;
             }
             // sequence: "ACTG" = 0x00|01|11|10
-            position = (tbits << (2*i));
-            key |= position;
+            key = (key << (2));
+            key |= tbits;
         }
         return key;
     }

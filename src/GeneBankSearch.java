@@ -42,7 +42,7 @@ public class GeneBankSearch{
 				while(sc.hasNext())
 				{
 					String line = sc.nextLine();
-					long data = ram.convertGBKtoSubseq(line);
+					data = ram.convertGBKtoSubseq(line);
 					tempForPrint = ram.convertLongtoString(data,4);
 					System.out.println(data);
 				}

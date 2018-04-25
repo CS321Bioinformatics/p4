@@ -1,6 +1,7 @@
-//package src;
+package src;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 
@@ -18,7 +19,7 @@ public class GeneBankCreateBTree {
 		String token;
 		boolean readLine = false ;
 		RAM ram = new RAM();
-		BTree btree;
+		BTree btree = null;
 
 		if ((args.length == 0) || (args.length < 4 || args.length > 6)) { //verify correct amount of args
 			//printUsage();
@@ -36,7 +37,7 @@ public class GeneBankCreateBTree {
 				gbk = new File(args[2]);
 
 				//BTreeNode tree = new BTreeNode();
-				//btree = new BTree(degree);
+				btree = new BTree(degree,"dump");
 
 				//Parse File
 				lineScan = new Scanner(gbk);
@@ -82,8 +83,16 @@ public class GeneBankCreateBTree {
 					if (isValid) {
 						//convert currString to long
 						long sequence = ram.convertGBKtoSubseq(currString);
+//						btree.writeToFile(Long.toString(sequence),1); //TODO node instead of subseq
 						//make tree object
-						btree.BTreeInsert(btree, sequence);
+
+						try {
+							btree.BTreeInsert(btree, sequence);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+
+
 						//search for object
 						//if found increment freq
 						//else insert
