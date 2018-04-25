@@ -18,11 +18,11 @@ public class GeneBankCreateBTree {
 		String token;
 		boolean readLine = false ;
 		RAM ram = new RAM();
-		BTree btree = new BTree();
+		BTree btree;
 
 		if ((args.length == 0) || (args.length < 4 || args.length > 6)) { //verify correct amount of args
 			//printUsage();
-			System.exit(1);
+			//System.exit(1);
 		}else {
 			try {
 				if (args.length == 6) {
@@ -35,7 +35,8 @@ public class GeneBankCreateBTree {
 				seqLength = Integer.parseInt(args[3]);
 				gbk = new File(args[2]);
 
-				//				BTreeNode tree = new BTreeNode();
+				//BTreeNode tree = new BTreeNode();
+				//btree = new BTree(degree);
 
 				//Parse File
 				lineScan = new Scanner(gbk);
@@ -82,7 +83,7 @@ public class GeneBankCreateBTree {
 						//convert currString to long
 						long sequence = ram.convertGBKtoSubseq(currString);
 						//make tree object
-						btree.bstInsert(sequence);
+						btree.BTreeInsert(btree, sequence);
 						//search for object
 						//if found increment freq
 						//else insert

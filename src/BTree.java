@@ -14,7 +14,7 @@ public class BTree {
 	public RandomAccessFile raf;
 	private int degree;
 	private RAM ram;
-	public BTreeNode root;
+	public BTreeNode root, nodeSize;
 	private ArrayList<TreeObject> btreeList = new ArrayList<TreeObject>();
 	private File file;
 //    long offset;
@@ -24,6 +24,19 @@ public class BTree {
 //    int parent = (btreeList.indexOf(node)-1)/2;
 
 
+	
+	public void BTree(int deg) throws IOException {
+		if (deg == 0) {
+			nodeSize = optimal();
+		}else {
+			degree = deg;
+		}
+        
+        
+    }
+	
+	
+	
     //TODO Page 492
     public void BTreeCreate(BTree T, String fileName, int degree) throws IOException {
         try {
@@ -158,7 +171,14 @@ public class BTree {
         return n;
     }
 
-
+    public static int optimal() {
+    	int optimum = 4096;
+    	int pointerSize = 4, objectSize  = 12, metadataSize = 5; 
+    	optimum = optimum + objectSize - metadataSize - pointerSize;
+    	optimum /= 2;
+    	optimum /= (objectSize + pointerSize);
+    	return optimum;
+    }
 
 
 }
