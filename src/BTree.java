@@ -25,7 +25,7 @@ public class BTree {
 
 
     //TODO Page 492
-    public void BTreeCreate(BTree T, String fileName) throws IOException {
+    public void BTreeCreate(BTree T, String fileName, int degree) throws IOException {
         try {
             file = new File(fileName);
             raf = new RandomAccessFile(file, "rw");
@@ -39,20 +39,13 @@ public class BTree {
 
 //      TODO  DiskWrite(x);
         T.root = x;
+
     }
 
-    private void DiskWrite(BTreeNode node, int offset) {
-        try {
-            raf.seek(offset);
-            raf.writeLong(offset);
-            for(int i =0; i < root.children.size();i++){
-                raf.writeLong(root.children.get(i));
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
+    //TODO btreewritetofile
+
+
 
     //TODO Page 495
 	public void BTreeInsert(BTree T, long key) throws IOException {
@@ -81,33 +74,31 @@ public class BTree {
         //"Cut(Node) and Paste(Node)"
         BTreeNode z = AllocateNode();
         //Here, x is the node being split, and y is x’s ith child
-//        z.leafList = y.leafList;
         z.children = y.children;
+//        z.isLeaf = y.isLeaf;
         z.setNumKeys(degree-1);
-        for(){
-
+        for(int j = 1; j <= degree-1; j++){
+            z.keyList.set(j, y.keyList.get(j+1));
         }
-//      2  BTreeNode y = Math.toIntExact(newNode.children.get(i));
-//        3 ́:leaf D y:leaf
-//        4  ́:nDt 1
-//        5 forjD1tot 1
-//        6  ́:keyj D y:keyjCt
-//        7 if not y:leaf
-//        8 for j D 1 to t
-//        9  ́:cj Dy:cjCt
-//        10 y:nDt 1
-//        11 forjDx:nC1downtoiC1
-//        12 x:cjC1 Dx:cj
-//        13 x:ciC1D ́
-//        14 forjDx:ndowntoi
-//        15 x:keyjC1 D x:keyj
-//        16 x.key_i D y.key_t
-//        17 x.n = (x.n)+1
-//        18 DISK-WRITE(y)
-//        19 DISK-WRITE(z)
-//        20 DISK-WRITE(x)
-
-
+        //if y is not a leaf
+        if(!y.isLeaf){
+            for(int j=1; j <= 2*degree-1; j++){
+                z.children.set(j, y.children.get(j+1));
+            }
+        }
+        y.setNumKeys(y.numKeys+1);
+        for(int j = x.numKeys+1; j >= i+1; j--){
+            x.children.set(j+1, x.children.get(j));
+        }
+        x.children.set(i+1, z.children.get(i));//children_i+1[X] = z TODO
+        for(int j = x.numKeys; j >= i; j--){
+            x.keyList.set(j+i, x.keyList.get(j));
+        }
+        x.keyList.set(i,y.keyList.get(i));
+        x.setNumKeys(x.numKeys+1);
+        DiskWrite(y);
+        DiskWrite(z);
+        DiskWrite(x);
     }
     //TODO Page 496
     private void BTreeInsertNonFull(BTreeNode newNode, long key) throws IOException {
@@ -121,7 +112,7 @@ public class BTree {
             }
             newNode.insertKey(newNode.getKey(i),i+1); //x.key_i+1 = k
             newNode.setNumKeys(newNode.numKeys()+1);
-            DiskWrite(newNode, newNode.getOffset());
+            DiskWrite(newNode);
         }
         else{
             while(i>=1 && (key < obj.compareTo(newNode.getKey(i)))){
@@ -135,7 +126,21 @@ public class BTree {
                     i++;
                 }
             }
-//            BTreeInsertNonFull(newNode.children.get(i).getKey(),key); TODO
+            BTreeInsertNonFull(newNode,key); //TODO replace w/ child of newNode instead(?)
+        }
+    }
+
+
+    private void DiskWrite(BTreeNode node) {
+        try {
+            raf.seek(node.getOffset());
+            raf.writeLong(node.getOffset());
+            for(int i =0; i < root.children.size();i++){
+                raf.writeLong(root.children.get(i));
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -149,13 +154,10 @@ public class BTree {
 	    n.isLeaf = true;
 	    n.setNumKeys(0);
 	    n.setOffset((int)offset);
-	    DiskWrite(n,(int)offset);
+	    DiskWrite(n);
         return n;
     }
 
-    //public Boolean bstSearch(){ To determine
-    //
-	//}
 
 
 
