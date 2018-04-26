@@ -11,7 +11,7 @@ public class BTree {
 	//key
 	//location of root
 	public RandomAccessFile raf;
-	private int degree;
+	private int degree, nodeSize, insertOffset, rootOffset;
 	public BTreeNode root;
 	private File file;
 
@@ -22,7 +22,7 @@ public class BTree {
 //    int parent = (btreeList.indexOf(node)-1)/2;
 
 
-	
+	//constructor for new btree created in createBTree
 	public BTree(int deg ,String fileName) {
 		if (deg == 0) {
 			degree = optimal();
@@ -45,8 +45,37 @@ public class BTree {
         }
 
     }
-	
-	
+//    //constructor for btree from btree file in gbsearch
+//    public BTree(int degree, File fileName, boolean cache, int cSize) throws IOException {
+//        if(cache){
+//            //create cache with cSize
+//        }
+//
+//	    this.degree = degree;
+//        nodeSize = (degree * 32) - 3;
+//        rootOffset = 12;
+//        insertOffset = rootOffset + nodeSize;
+//        BTreeNode x = AllocateNode();
+//        x.isLeaf = true;
+//        x.setNumKeys(0);
+//
+////      TODO  DiskWrite(x);
+//
+//        T.root = x;
+//
+//    }
+    public BTree(int degree, File fileName, boolean cache, int cSize) throws IOException {
+        try {
+            //file = new File(fileName);
+            raf = new RandomAccessFile(file, "rw");
+        }
+        catch (Exception e){
+            System.err.println("Error creating file");
+        }
+        DiskRead();
+        root = MakeNodeFromFile(12);
+    }
+
 	
     //TODO Page 492
     public void BTreeCreate(BTree T, String fileName, int degree) throws IOException {
@@ -197,6 +226,20 @@ public class BTree {
     }
 
     private void DiskRead(Long aLong) {
+
+    }
+
+
+    private void DiskRead() {
+        try{
+            raf.seek(0);
+            degree = raf.readInt(); //assuming degree is being stored in front
+            nodeSize = raf.readInt();
+            rootOffset = raf.readInt();
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
     //allocate the full node size, not the variable (NOT size of subsequence)
     private BTreeNode AllocateNode() throws IOException {
@@ -217,6 +260,45 @@ public class BTree {
     	optimum /= 2;
     	optimum /= (objectSize + pointerSize);
     	return optimum;
+    }
+
+    public BTreeNode MakeNodeFromFile(int offset){
+        BTreeNode x = null;
+        //cache stuff
+
+        x = new BTreeNode();
+        TreeObject y = null;
+
+        x.setOffset(offset);
+        int childIndex = 0;
+        try {
+            raf.seek(offset);
+            boolean isLeaf = raf.readBoolean(); //if this is where we are storing this info
+            x.isLeaf = isLeaf;
+            x.setNumKeys(raf.readInt());
+            //x.setParent(raf.readInt());
+            for (childIndex = 0; childIndex < 2 * degree - 1; childIndex++) {
+                //if(childIndex < x.getNumKeys() + 1 && !x.isLeaf()){
+                //int child = raf.readInt();
+                //x add child
+                //}else if(childIndex >= x.getNumKeys() + 1 || x.isLeaf()){
+                //raf.seek(raf.getFilePointer() + 4);
+                //}
+                //if(childIndex < x.getNumKeys()){
+                //long val = raf.readLong();
+                //int freq = raf.readInt();
+                //tObj = new TreeObject(val,freq);
+                //x add key obj
+            }
+//            if(childIndex == x.getNumKeys() && !x.isLeaf()){
+//            int child = raf.readInt();
+//            x add child
+//            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
+        return x;
     }
 
 
