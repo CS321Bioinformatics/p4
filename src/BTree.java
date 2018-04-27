@@ -115,7 +115,8 @@ public class BTree {
 		    T.root = newNode;
 		    newNode.isLeaf = false;
             newNode.setNumKeys(0);
-            newNode.children = r.children;//set(1,root.getKey(1)); //TODO from book: s.c_1 = r
+            newNode.children = r.children;//set(1,root.getKey(1)); //TODO from book: s.c_1 = r\
+            r.parent = newNode.nodeLocation;
             //assuming that this index is full of child
             BTreeSplitChild(newNode,1, r);
             BTreeInsertNonFull(newNode,key);
@@ -315,6 +316,13 @@ public class BTree {
         }
 
         return x;
+    }
+
+    public String inOrderPrint(){
+        if(root != null){
+            inOrderPrint(root.keyList.get());
+
+        }
     }
 
 
