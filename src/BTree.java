@@ -276,24 +276,25 @@ public class BTree {
             boolean isLeaf = raf.readBoolean(); //if this is where we are storing this info
             x.isLeaf = isLeaf;
             x.setNumKeys(raf.readInt());
-            //x.setParent(raf.readInt());
+            x.parent = raf.readInt();
             for (childIndex = 0; childIndex < 2 * degree - 1; childIndex++) {
-                //if(childIndex < x.getNumKeys() + 1 && !x.isLeaf()){
-                //int child = raf.readInt();
-                //x add child
-                //}else if(childIndex >= x.getNumKeys() + 1 || x.isLeaf()){
-                //raf.seek(raf.getFilePointer() + 4);
-                //}
-                //if(childIndex < x.getNumKeys()){
-                //long val = raf.readLong();
-                //int freq = raf.readInt();
-                //tObj = new TreeObject(val,freq);
-                //x add key obj
+                if(childIndex < x.numKeys() + 1 && !x.isLeaf){
+                int child = raf.readInt();
+                x.insertChild(child);
+                }else if(childIndex >= x.numKeys() + 1 || x.isLeaf){
+                raf.seek(raf.getFilePointer() + 4);
+                }
+                if(childIndex < x.numKeys()) {
+                    long val = raf.readLong();
+                    int freq = raf.readInt();
+                    y = new TreeObject(val, freq);
+                    x.insertKey(y,0);/////need to check this
+                }
             }
-//            if(childIndex == x.getNumKeys() && !x.isLeaf()){
-//            int child = raf.readInt();
-//            x add child
-//            }
+            if(childIndex == x.numKeys() && !x.isLeaf){
+            int child = raf.readInt();
+            x.insertChild(child);
+            }
         }catch(IOException e){
             e.printStackTrace();
         }
