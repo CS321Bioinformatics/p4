@@ -12,7 +12,7 @@ public class GeneBankCreateBTree {
 	public static void main(String[] args) {
 		int cacheFlag, degree, seqLength = 0, cacheSize, debugLevel;
 		String gbkFileName;
-		File gbk;
+		File gbk = null;
 		Scanner lineScan, charScan;
 		String line = "", DNA = "";
 		StringBuilder totalDNA = new StringBuilder();
@@ -87,6 +87,7 @@ public class GeneBankCreateBTree {
 						//make tree object
 
 						try {
+							btree.filePrinter(sequence,gbk,seqLength);
 							btree.BTreeInsert(btree, sequence);
 						} catch (IOException e) {
 							e.printStackTrace();

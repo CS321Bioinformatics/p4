@@ -13,7 +13,8 @@ public class BTree {
 	public RandomAccessFile raf;
 	private int degree, nodeSize, insertOffset, rootOffset;
 	public BTreeNode root;
-	private File file;
+	private File file, dump;
+	public PrintWriter writer;
 
 //    long offset;
 
@@ -318,12 +319,25 @@ public class BTree {
         return x;
     }
 
-    public String inOrderPrint(){
-        if(root != null){
-            inOrderPrint(root.keyList.get());
+    public void filePrinter(long subSeq, File loadedGBK,int seqLength){
+        try {
+//            dump = new File(loadedGBK+".btree."+seqLength+"."+degree);
+            writer = new PrintWriter(new FileWriter(loadedGBK+".btree."+seqLength+"."+degree, true),true);
+
+            writer.write("something");
 
         }
+        catch (Exception e){
+            System.err.println("Error creating .gbk.btree");
+        }
     }
+
+//    public String inOrderPrint(){
+//        if(root != null){
+//            inOrderPrint(root.keyList.get());
+//
+//        }
+//    }
 
 
 }
