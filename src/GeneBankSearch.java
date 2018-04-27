@@ -1,7 +1,6 @@
 package src;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Scanner;
 
 
@@ -50,27 +49,40 @@ public class GeneBankSearch{
 				sequence = Integer.parseInt(sequenceString);
 
 
-				//TODO testing RAM class 4/17/18
-				String tempForPrint = "";
-				String tempDataString = "G"; //0x00101101
+//				//TODO testing RAM class 4/17/18
+//				String tempForPrint = "";
+//				String tempDataString = "G"; //0x00101101
 				RAM ram = new RAM();
 
-				BTree tree = new BTree(degree, bTree, cacheFlag, cacheSize);
+				BTree tree = new BTree(sequence, degree, bTFileName, cacheFlag, cacheSize);
 				//TODO Trying to work on the conversions, keep getting ("a" * how much the inputLength is)
-				long data = ram.convertGBKtoSubseq(tempDataString);
-				tempForPrint = ram.convertLongtoString(data,1);
+				//long data = ram.convertGBKtoSubseq(tempDataString);
+				//tempForPrint = ram.convertLongtoString(data,1);
 
-				System.out.println(tempForPrint);
+				//System.out.println(tempForPrint);
+				try {
+					Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("dump"), "utf-8"));
+
+
 
 				Scanner sc = new Scanner(query);
+
+
 				while(sc.hasNext())
 				{
 					String line = sc.nextLine();
-					data = ram.convertGBKtoSubseq(line);
-					tempForPrint = ram.convertLongtoString(data,4);
-					System.out.println(data);
+					long data = ram.convertGBKtoSubseq(line);
+					//tempForPrint = ram.convertLongtoString(data,4);
+					TreeObject x = tree.BTreeSearch(tree.root, data);
+					if (x != null){
+						writer.write(line + ":" + '\t' + x.frequency);
+					}
 				}
-
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
 				
 			}

@@ -10,7 +10,8 @@ public class GeneBankCreateBTree {
 	//TODO Driver class to create a BTree file from a given gbk file	
 	//args format: <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]
 	public static void main(String[] args) {
-		int cacheFlag, degree, seqLength = 0, cacheSize, debugLevel;
+		int degree, seqLength = 0, cacheSize =0, debugLevel;
+		boolean cacheFlag = false;
 		String gbkFileName;
 		File gbk = null;
 		Scanner lineScan, charScan;
@@ -30,14 +31,16 @@ public class GeneBankCreateBTree {
 					cacheSize = Integer.parseInt(args[4]);
 					debugLevel = Integer.parseInt(args[5]);
 				}
-
-				cacheFlag = Integer.parseInt(args[0]);
+				int cache = Integer.parseInt(args[0]);
+				if (cache == 1)
+						cacheFlag = true;
+				else cacheFlag = false;
 				degree = Integer.parseInt(args[1]);
 				seqLength = Integer.parseInt(args[3]);
 				gbk = new File(args[2]);
 
 				//BTreeNode tree = new BTreeNode();
-				btree = new BTree(degree,"dump");
+				btree = new BTree(seqLength, degree, gbk, cacheFlag, cacheSize);
 
 				//Parse File
 				lineScan = new Scanner(gbk);
@@ -69,6 +72,8 @@ public class GeneBankCreateBTree {
 
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			} finally {
 				DNA = totalDNA.toString();
 				int index = 0;
@@ -87,7 +92,6 @@ public class GeneBankCreateBTree {
 						//make tree object
 
 						try {
-							btree.filePrinter(sequence,gbk,seqLength);
 							btree.BTreeInsert(btree, sequence);
 						} catch (IOException e) {
 							e.printStackTrace();
@@ -104,6 +108,7 @@ public class GeneBankCreateBTree {
 				}
 				//output dump or poop
 				//System.out.println("done");
+
 				System.exit(0);
 			}
 			
