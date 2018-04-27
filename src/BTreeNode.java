@@ -50,6 +50,7 @@ public class BTreeNode {
 		children = new ArrayList<Long>();
 		children1 = new ArrayList<Integer>();
 		children.add(obj);
+		children1.add(obj.intValue());
 
 		//how to get/set this nodes location
 		//new node location method in RAM class??
@@ -98,7 +99,9 @@ public class BTreeNode {
 		this.offset = offset;
 	}
 
-	public ArrayList<Long> getKey() {
-		return children;
-	}
+//	public ArrayList<Long> getKey() {
+//		return children;
+//	}
+
+	public ArrayList<Integer> getKey(){return children1;}
 }

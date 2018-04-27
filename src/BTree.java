@@ -171,24 +171,28 @@ public class BTree {
             if(newNode.numKeys != 0) {
                 System.out.println(key);
                 //handle the case in which x is a leaf node by inserting key k into x.
-                while (i >= 1 && obj.compareTo(newNode.getKey(i - 1)) < 0) {
-                    newNode.insertKey(newNode.getKey(i-1), i);
+                while (i > 1 && obj.compareTo(newNode.getKey(i-1)) < 0) {
+                    newNode.insertKey(newNode.getKey(i - 1), i);
                     i--;
                 }
 
-            //if frequency
-            if(obj.compareTo(newNode.getKey(i - 1)) == 0){
-                    newNode.getKey(i -1).incrementFrequency();
-            }else {
+                //if frequency
+                if (obj.compareTo(newNode.getKey(i-1)) == 0)
+                    newNode.getKey(i - 1).incrementFrequency();
+            }
+            else {
                 // newNode.getKey(i-1
 //            else{
 //                newNode.keyList.add(i,obj);
 //            }
+                System.out.println(key);
                 newNode.insertKey(obj, i); //x.key_i+1 = k
-                newNode.setNumKeys(newNode.numKeys() + 1);
+                newNode.numKeys++;
                 DiskWrite(newNode);
             }
-            }
+
+
+
         }
         else{
             while(i>=1 && obj.compareTo(newNode.getKey(i)) > 0){
@@ -198,14 +202,15 @@ public class BTree {
                 newNode.getKey(i -1).incrementFrequency();
             }
             i++;
-            DiskRead(newNode.children.get(i));
-            if(newNode.children.get(i) == 2*degree-1){
-//                BTreeSplitChild(newNode,i,newNode.keyList.get(i));
+            //DiskRead(newNode.children.get(i));
+            BTreeNode child = MakeNodeFromFile(newNode.children1.get(i));
+            if(child.numKeys == 2*degree-1){
+                BTreeSplitChild(newNode,i,child);
                 if(key > newNode.getKey(i).getDnaString()){
                     i++;
                 }
             }
-            BTreeInsertNonFull(newNode,key); //TODO replace w/ child of newNode instead(?)
+            BTreeInsertNonFull(child,key); //TODO replace w/ child of newNode instead(?)
         }
 
     }
