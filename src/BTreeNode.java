@@ -15,6 +15,7 @@ public class BTreeNode {
 	public int nodeLocation;
 	public ArrayList<Long> children;
 	public ArrayList<TreeObject> keyList;
+	public ArrayList<Integer> children1;
 	public int parent, leftChild, rightChild, node;
 	public int numKeys;
 
@@ -30,6 +31,7 @@ public class BTreeNode {
 		parent = (nodeLocation-1)/2;
 		keyList = new ArrayList<TreeObject>();
 		children = new ArrayList<Long>();
+		children1 = new ArrayList<Integer>();
 		//leafList = new ArrayList<Long?>();
 
 
@@ -46,6 +48,7 @@ public class BTreeNode {
 	public BTreeNode(Long obj, BTreeNode parentNode){
 		int numObjects = 1;
 		children = new ArrayList<Long>();
+		children1 = new ArrayList<Integer>();
 		children.add(obj);
 
 		//how to get/set this nodes location
@@ -83,6 +86,9 @@ public class BTreeNode {
 	public void insertKey(TreeObject obj, int i) {
 		keyList.add(i,obj);
 
+	}
+	public void insertChild(int i){
+		children1.add(i);
 	}
 	public int getOffset() {
 		return offset;
