@@ -10,52 +10,38 @@ public class BTCache implements Iterable<BTreeNode>
     private int size1;
 
     public BTCache(int inputSize) {
-        list = new LinkedList<T>();
+        list = new LinkedList<BTreeNode>();
         size1 = inputSize;
     }
 
-    /**
-     * This method returns the object being searched for
-     * @param object being searched for
-     * @return the object
-     */
-    public T getObject(T object){
+
+    public BTreeNode getObject(BTreeNode object){
         return object;
     }
-    /**
-     * Searches for object in cache and returns true if found
-     * @param object
-     * @return boolean true if found
-     */
-    public boolean findObject(T object) {
+
+
+    public boolean findObject(BTreeNode object) {
         return list.contains(object);
     }
-    /**
-     * Moves a given object to the top of the cache
-     * @param object
-     */
-    public void moveObject(T object) {
+
+
+    public void moveObject(BTreeNode object) {
         list.remove(object);
         list.addFirst(object);
     }
-    /**
-     * Removes the given object from the cache
-     * @param object
-     */
-    public void removeObject(T object) {
+
+
+    public void removeObject(BTreeNode object) {
         list.remove(object);
     }
-    /**
-     * Removes the last object from the cache
-     */
+
+
     public void removeLast() {
         list.removeLast();
     }
-    /**
-     * Adds a given object to the cache, checks capacity first
-     * @param object
-     */
-    public void addObject(T object) {
+
+
+    public void addObject(BTreeNode object) {
         if(list.size()>=size1) {
             list.addFirst(object);
             list.removeLast();
