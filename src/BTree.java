@@ -171,33 +171,43 @@ public class BTree {
             if(newNode.numKeys != 0) {
                 System.out.println(key);
                 //handle the case in which x is a leaf node by inserting key k into x.
-                while (i >= 1 && obj.compareTo(newNode.getKey(i - 1))) {
+                while (i >= 1 && obj.compareTo(newNode.getKey(i - 1)) < 0) {
                     newNode.insertKey(newNode.getKey(i-1), i);
                     i--;
                 }
-            }
+
             //if frequency
+            if(obj.compareTo(newNode.getKey(i - 1)) == 0){
+                    newNode.getKey(i -1).incrementFrequency();
+            }else {
+                // newNode.getKey(i-1
 //            else{
 //                newNode.keyList.add(i,obj);
 //            }
-            newNode.insertKey(obj,i); //x.key_i+1 = k
-            newNode.setNumKeys(newNode.numKeys()+1);
-            DiskWrite(newNode);
+                newNode.insertKey(obj, i); //x.key_i+1 = k
+                newNode.setNumKeys(newNode.numKeys() + 1);
+                DiskWrite(newNode);
+            }
+            }
         }
         else{
-            while(i>=1 && obj.compareTo(newNode.getKey(i))){
+            while(i>=1 && obj.compareTo(newNode.getKey(i)) > 0){
                 i--;
+            }
+            if(obj.compareTo(newNode.getKey(i - 1)) == 0){
+                newNode.getKey(i -1).incrementFrequency();
             }
             i++;
             DiskRead(newNode.children.get(i));
             if(newNode.children.get(i) == 2*degree-1){
 //                BTreeSplitChild(newNode,i,newNode.keyList.get(i));
-                if(key > newNode.children.get(i)){
+                if(key > newNode.getKey(i).getDnaString()){
                     i++;
                 }
             }
             BTreeInsertNonFull(newNode,key); //TODO replace w/ child of newNode instead(?)
         }
+
     }
 
     public void writeToFile(BTreeNode nodeToWrite, int i) throws FileNotFoundException {//, String filename

@@ -11,7 +11,7 @@ public class TreeObject {
 	//Linked List or ArrayList of tree objects
 	public long dnaString;
 	public int frequency;
-	public boolean isLeaf;
+	//public boolean isLeaf;
 
 	public long getDnaString() {
 		return dnaString;
@@ -25,22 +25,22 @@ public class TreeObject {
 		this.frequency++;
 	}
 
-	public boolean compareTo(TreeObject obj){
-		if(this.dnaString > obj.dnaString){return false;}
-		else if(this.dnaString < obj.dnaString){return true;}
-		else return true;
+	public int compareTo(TreeObject obj){
+		if(this.dnaString > obj.dnaString){return 1;}
+		else if(this.dnaString < obj.dnaString){return -1;}
+		else return 0;
 	}
 
 	//Constructors
 	public TreeObject(long dnaString){
 		this.frequency = 0;
 		this.dnaString = dnaString;
-		isLeaf = false;
+		//isLeaf = false;
 
 	}
 	public TreeObject(long dnaString, int frequency){
 		this.frequency = frequency;
 		this.dnaString = dnaString;
-		isLeaf = false;
+		//isLeaf = false;
 	}
 }
