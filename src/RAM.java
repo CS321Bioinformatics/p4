@@ -45,7 +45,7 @@ public class RAM {
     }
 
 
-    public String convertLongtoString(Long input, int length)
+    public String convertLongtoString(long input, int length)
     {
         String result = ""; //append to end
         long temp;

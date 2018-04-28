@@ -88,6 +88,9 @@ public class BTreeNode {
 		keyList.add(i,obj);
 
 	}
+	public int getChild(int i){
+		return children1.get(i); //convert to regular int from Primitive?
+	}
 	public void insertChild(int i){
 		children1.add(i);
 	}

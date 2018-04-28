@@ -62,6 +62,7 @@ public class BTree {
         this.degree = 0;
         this.nodeSize = 0;
         this.rootOffset = 0;
+        DiskWrite();
         DiskRead();
         root = MakeNodeFromFile(12);
 
@@ -90,6 +91,7 @@ public class BTree {
 
         BTreeFileCreate(fileName, sequence);
         DiskWrite();
+        DiskRead();
         BTreeNode x = AllocateNode();
         x.isLeaf = true;
         x.setNumKeys(0);
@@ -167,7 +169,7 @@ public class BTree {
         }
         //if y is not a leaf
         if(!y.isLeaf){
-            for(int j=1; j <= 2*degree-1; j++){
+            for(int j = 1; j <= 2*degree-1; j++){
                 z.children.set(j, y.children.get(j+1));
             }
         }
@@ -250,15 +252,19 @@ public class BTree {
                 if(childIndex < node.numKeys() + 1 && !node.isLeaf){
                     raf.writeInt(node.children1.get(childIndex));
                 }else if(childIndex >= node.numKeys() + 1 || node.isLeaf){
-                    raf.seek(raf.getFilePointer() + 4);
+//                    raf.seek(raf.getFilePointer() + 4);
+                    raf.writeInt( 0);
                 }
                 if(childIndex < node.numKeys()) {
                     raf.writeLong(node.keyList.get(childIndex).dnaString);
                     raf.writeInt(node.keyList.get(childIndex).frequency);
                 }
+                else if(childIndex >= node.numKeys() || node.isLeaf){
+                    raf.writeLong(0);
+                }
             }
             if(childIndex == node.numKeys() && !node.isLeaf){
-                raf.writeInt(node.children1.get(childIndex));
+                raf.writeInt(node.getChild(childIndex));
             }
         }catch(IOException e){
             e.printStackTrace();
@@ -270,12 +276,13 @@ public class BTree {
 //
 //    }
     //default raf write, writes tree metadata
-    private void DiskWrite(){
+    private void DiskWrite(){//TODO position | Byte array and
         try{
             raf.seek(0);
-        raf.write(degree); //assuming degree is being stored in front
-        raf.write(nodeSize);
-        raf.write(rootOffset);
+        raf.writeInt(degree); //assuming degree is being stored in front
+        raf.writeInt(nodeSize);
+        raf.writeInt(rootOffset);
+
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -288,6 +295,9 @@ public class BTree {
             degree = raf.readInt(); //assuming degree is being stored in front
             nodeSize = raf.readInt();
             rootOffset = raf.readInt();
+            System.out.println("Disk"+degree);
+            System.out.println(nodeSize);
+            System.out.println(rootOffset);
 
         }catch(IOException e){
             e.printStackTrace();
@@ -395,12 +405,22 @@ public class BTree {
             System.err.println("Error creating .gbk.btree");
         }
     }
-//    public String inOrderPrint(){
-//        if(root != null){
-//            inOrderPrint(root.keyList.get());
-//
-//        }
-//    }
+    //Needed to print when debug level is 0
+    public void inOrderWriteFile(BTreeNode node,PrintWriter writer,int sequence){
+        RAM ram = new RAM();
+        int i = 0;
+        while(i<node.numKeys()){
+            writer.println(ram.convertLongtoString(node.getKey(i).dnaString,sequence));
+            writer.append(": " + node.getKey(i).frequency);
+            i++;
+        }
+        if(!node.isLeaf){
+            while(i<node.numKeys()+1){
+//            inOrderWriteFile(root.keyList.get());
+
+            }
+        }
 
     //public String dumpString
+    }
 }
