@@ -78,6 +78,10 @@ public class GeneBankSearch{
 						writer.write(line + ":" + '\t' + x.frequency);
 					}
 				}
+
+//				if(debugLevel == 0){
+//					tree.inOrderWriteFile(writer, );
+//				}
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

@@ -2,6 +2,7 @@ package src;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 
@@ -9,8 +10,8 @@ import java.util.Scanner;
 public class GeneBankCreateBTree {
 	//TODO Driver class to create a BTree file from a given gbk file	
 	//args format: <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]
-	public static void main(String[] args) {
-		int degree, seqLength = 0, cacheSize =0, debugLevel;
+	public static void main(String[] args) throws IOException {
+		int degree, seqLength = 0, cacheSize =0, debugLevel = 0;
 		boolean cacheFlag = false;
 		String gbkFileName;
 		File gbk = null;
@@ -107,6 +108,18 @@ public class GeneBankCreateBTree {
 					index++;
 				}
 				//output dump or poop
+//				if(debugLevel>0){
+//					File dump = new File("dump1");
+//					dump.delete();
+//					dump.createNewFile();
+//					PrintWriter writer = new PrintWriter(dump);
+//					btree.inOrderWriteFile(btree.root,writer, seqLength);
+//					writer.close();
+//				}
+
+				if(cacheFlag){
+					btree.flushCache();
+				}
 				//System.out.println("done");
 
 				System.exit(0);

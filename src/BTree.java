@@ -15,6 +15,7 @@ public class BTree {
 	public BTreeNode root;
 	private File file, binFile;
 	public PrintWriter writer;
+	private BTCache treeCache;
 
 //    long offset;
 
@@ -52,7 +53,6 @@ public class BTree {
         catch (Exception e){
             System.err.println("Error creating file");
         }
-        //if cache stuff
 
         //this.degree = degree;
 
@@ -77,7 +77,9 @@ public class BTree {
             System.err.println("Error creating file");
         }
         //if cache
-
+        if (cache){
+            treeCache = new BTCache(cSize);
+        }
 
 
         if (deg == 0) {
@@ -288,7 +290,7 @@ public class BTree {
         }
 
     }
-    //default raf grab metadata from front of bin file
+    //default raf grab tree metadata from front of bin file
     private void DiskRead() {
         try{
             raf.seek(0);
@@ -330,6 +332,10 @@ public class BTree {
     public BTreeNode MakeNodeFromFile(int offset){
         BTreeNode x = null;
         //cache stuff
+        if (treeCache != null){
+            x = treeCache.getObject(offset);
+        }
+        if(x!=null) return x;
 
         x = new BTreeNode();
         TreeObject y = null;
@@ -416,11 +422,77 @@ public class BTree {
         }
         if(!node.isLeaf){
             while(i<node.numKeys()+1){
+                BTreeNode x = MakeNodeFromFile(node.getChild(i));
+                inOrderWriteFile(x, writer, sequence);
+                if(i < node.numKeys){
+                    writer.println(ram.convertLongtoString(node.getKey(i).dnaString,sequence));
+                    writer.append(": " + node.getKey(i).frequency);
+                }
 //            inOrderWriteFile(root.keyList.get());
-
+                i++;
             }
         }
+    }
 
-    //public String dumpString
+
+
+
+
+
+
+    //cache and other added stuffs
+    //trying this method to write the node to the raf
+    public void putNodeInRAF(BTreeNode n, int offset){
+        int i = 0;
+        try{
+            writeNodeMeta(n,n.getOffset());
+            raf.writeInt((n.parent));
+            for(;i < 2; i++){
+                if (i < n.numKeys() + 1 && !n.isLeaf){
+                    raf.writeInt(n.getChild(i));
+                }
+                else if(i >= n.numKeys + 1 || n.isLeaf){
+                    raf.writeInt(0);
+                }
+                if(i < n.numKeys){
+                    raf.writeLong(n.getKey(i).getDnaString());
+                    raf.writeInt(n.getKey(i).getFrequency());
+                }
+                else if( i >= n.numKeys || n.isLeaf){
+                    raf.writeLong(0);
+                }
+            }
+            if(i == n.numKeys && !n.isLeaf){
+                raf.writeInt(n.getChild(i));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    //method to write not meta data
+    public void writeNodeMeta(BTreeNode x, int offset){
+        try {
+            raf.seek(offset);
+            raf.writeBoolean(x.isLeaf); //if this is where we are storing this info
+            raf.writeInt(x.numKeys());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void flushCache(){
+        if(treeCache != null){
+            for (BTreeNode node : treeCache) putNodeInRAF(node, node.getOffset());
+        }
+    }
+
+    public void DiskWrite(BTreeNode x, int offset){
+        if (treeCache != null){
+            BTreeNode node = treeCache.addObject(x);
+            if (node != null){
+                putNodeInRAF(node, node.getOffset());
+            }
+        }else{
+            putNodeInRAF(x, offset);
+        }
     }
 }
