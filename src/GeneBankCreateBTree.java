@@ -22,6 +22,8 @@ public class GeneBankCreateBTree {
 		boolean readLine = false ;
 		RAM ram = new RAM();
 		BTree btree = null;
+		long startTime = System.currentTimeMillis();
+
 
 		if ((args.length == 0) || (args.length < 4 || args.length > 6)) { //verify correct amount of args
 			//printUsage();
@@ -108,20 +110,21 @@ public class GeneBankCreateBTree {
 					index++;
 				}
 				//output dump or poop
-//				if(debugLevel>0){
-//					File dump = new File("dump1");
-//					dump.delete();
-//					dump.createNewFile();
-//					PrintWriter writer = new PrintWriter(dump);
-//					btree.inOrderWriteFile(btree.root,writer, seqLength);
-//					writer.close();
-//				}
+				if(debugLevel==0){
+					File dump = new File("data/dump1");
+					dump.delete();
+					dump.createNewFile();
+					PrintWriter writer = new PrintWriter(dump);
+					btree.inOrderFilePrint(btree.root,writer, seqLength);
+					writer.close();
+				}
 
 				if(cacheFlag){
 					btree.flushCache();
 				}
 				//System.out.println("done");
-
+				long endTime = System.currentTimeMillis();
+				System.out.println("This program ran in " + (endTime- startTime)/1000 + " seconds.");
 				System.exit(0);
 			}
 			

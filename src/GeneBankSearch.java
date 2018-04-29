@@ -54,14 +54,14 @@ public class GeneBankSearch{
 //				String tempDataString = "G"; //0x00101101
 				RAM ram = new RAM();
 
-				BTree tree = new BTree(sequence, degree, bTFileName, cacheFlag, cacheSize);
+				BTree tree = new BTree(bTree, sequence, degree, cacheFlag, cacheSize);
 				//TODO Trying to work on the conversions, keep getting ("a" * how much the inputLength is)
 				//long data = ram.convertGBKtoSubseq(tempDataString);
 				//tempForPrint = ram.convertLongtoString(data,1);
 
 				//System.out.println(tempForPrint);
 				try {
-					Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("dump"), "utf-8"));
+					//Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("dump"), "utf-8"));
 
 
 
@@ -75,15 +75,15 @@ public class GeneBankSearch{
 					//tempForPrint = ram.convertLongtoString(data,4);
 					TreeObject x = tree.BTreeSearch(tree.root, data);
 					if (x != null){
-						writer.write(line + ":" + '\t' + x.frequency);
+						//writer.write(line + ":" + '\t' + x.frequency);
+						System.out.println(line + ":" + x.frequency);
 					}
+
 				}
 
 //				if(debugLevel == 0){
 //					tree.inOrderWriteFile(writer, );
 //				}
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -92,6 +92,7 @@ public class GeneBankSearch{
 			}
 			catch (Exception err){
 				System.err.println("Something went wrong in GeneBankSearch");
+				err.printStackTrace();
 			}
 
 		}

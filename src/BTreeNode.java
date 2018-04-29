@@ -28,7 +28,8 @@ public class BTreeNode {
 	public BTreeNode(){
 		int numObjects = 1;
 		nodeLocation = 0;
-		parent = (nodeLocation-1)/2;
+		parent = 0;
+		isLeaf = false;
 		keyList = new ArrayList<TreeObject>();
 //		children = new ArrayList<Long>();
 		children1 = new ArrayList<Integer>();
