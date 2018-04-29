@@ -44,11 +44,54 @@ public class BTree {
 //        T.root = x;
 //
 //    }
+
+
+    // btree createbtree constructor
+    public BTree(int sequence, int deg, File fileName, boolean cache, int cSize) throws IOException {
+        if (deg == 0) {
+            degree = optimal();
+        }else {
+            degree = deg;
+        }
+
+        try {
+            //file = new File(fileName);
+            file = BTreeFileCreate("data/"+fileName.getName(),sequence,degree);//new RandomAccessFile(fileName.getName(), "rw");
+            raf = new RandomAccessFile(file, "rw");
+        }
+        catch (Exception e){
+            System.err.println("Error creating file");
+        }
+        //if cache
+        if (cache){
+            treeCache = new BTCache(cSize);
+        }
+
+
+
+        nodeSize = (degree * 32);
+        rootOffset = 12;
+        insertOffset = rootOffset + nodeSize;
+
+//        BTreeFileCreate(fileName, sequence);
+        DiskWrite();
+        DiskRead();
+        BTreeNode x = AllocateNode();
+        x.isLeaf = true;
+        x.setNumKeys(0);
+
+
+
+        root = x;
+
+    }
+
+
 //constructor for GeneBankSearch
     public BTree(int sequence, int degree, String fileName, boolean cache, int cSize) throws IOException {
         try {
-            file = new File(fileName);
-            raf = new RandomAccessFile(file, "rw");
+//            file = new File(fileName);
+            raf = new RandomAccessFile(file, "r");
         }
         catch (Exception e){
             System.err.println("Error creating file");
@@ -67,42 +110,7 @@ public class BTree {
         root = MakeNodeFromFile(12);
 
     }
-// btree createbtree constructor
-    public BTree(int sequence, int deg, File fileName, boolean cache, int cSize) throws IOException {
-        try {
-            //file = new File(fileName);
-            raf = new RandomAccessFile(fileName.getName(), "rw");
-        }
-        catch (Exception e){
-            System.err.println("Error creating file");
-        }
-        //if cache
-        if (cache){
-            treeCache = new BTCache(cSize);
-        }
 
-
-        if (deg == 0) {
-            degree = optimal();
-        }else {
-            degree = deg;
-        }
-        nodeSize = (degree * 32);
-        rootOffset = 12;
-        insertOffset = rootOffset + nodeSize;
-
-        BTreeFileCreate(fileName, sequence);
-        DiskWrite();
-        DiskRead();
-        BTreeNode x = AllocateNode();
-        x.isLeaf = true;
-        x.setNumKeys(0);
-
-
-
-        root = x;
-
-    }
 
 	
     //TODO Page 492
@@ -399,10 +407,10 @@ public class BTree {
 //    }
 
     //initialize bin file for btreecreate constructor
-    public void BTreeFileCreate(File loadedGBK,int seqLength){
+    public File BTreeFileCreate(String loadedGBK,int seqLength,int degree){
         try {
             binFile = new File(loadedGBK+".btree."+seqLength+"."+degree);
-            writer = new PrintWriter(new FileWriter(loadedGBK+".btree."+seqLength+"."+degree, true),true);
+//            writer = new PrintWriter(new FileWriter(loadedGBK+".btree."+seqLength+"."+degree, true),true);
 
             //writer.write("something");
 
@@ -410,6 +418,7 @@ public class BTree {
         catch (Exception e){
             System.err.println("Error creating .gbk.btree");
         }
+        return binFile;
     }
     //Needed to print when debug level is 0
     public void inOrderWriteFile(BTreeNode node,PrintWriter writer,int sequence){

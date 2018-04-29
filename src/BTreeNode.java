@@ -30,7 +30,7 @@ public class BTreeNode {
 		nodeLocation = 0;
 		parent = (nodeLocation-1)/2;
 		keyList = new ArrayList<TreeObject>();
-		children = new ArrayList<Long>();
+//		children = new ArrayList<Long>();
 		children1 = new ArrayList<Integer>();
 		//leafList = new ArrayList<Long?>();
 
@@ -49,7 +49,7 @@ public class BTreeNode {
 		int numObjects = 1;
 		children = new ArrayList<Long>();
 		children1 = new ArrayList<Integer>();
-		children.add(obj);
+//		children.add(obj);
 		children1.add(obj.intValue());
 
 		//how to get/set this nodes location
@@ -105,6 +105,15 @@ public class BTreeNode {
 //	public ArrayList<Long> getKey() {
 //		return children;
 //	}
+
+
+	public int getParent() {
+		return parent;
+	}
+
+	public void setParent(int parent) {
+		this.parent = parent;
+	}
 
 	public ArrayList<Integer> getKey(){return children1;}
 }
