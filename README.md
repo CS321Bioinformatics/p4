@@ -67,17 +67,17 @@ Timing results:
    GeneBankCreateBTree:
     $ time java GeneBankCreateBTree 0 0 data/test3.gbk 7
     real        
-    user        
+    user        20.399
     sys         
 
     $ time java GeneBankCreateBTree 1 0 data/test3.gbk 7 100
     real        
-    user        
+    user        20.387
     sys         
 
     $ time java GeneBankCreateBTree 1 0 data/test3.gbk 7 500
     real        
-    user        
+    user        20.328
     sys         
 
   

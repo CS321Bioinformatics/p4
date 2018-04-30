@@ -116,7 +116,7 @@ public class GeneBankCreateBTree {
 					dump.delete();
 					dump.createNewFile();
 					PrintWriter writer = new PrintWriter(dump);
-					btree.inOrderFilePrint(btree.root,writer, seqLength);
+					btree.inOrderWriteFile(btree.root,writer, seqLength);
 					writer.close();
 				}
 
@@ -124,7 +124,7 @@ public class GeneBankCreateBTree {
 					btree.flushCache();
 				}
 				//System.out.println("done");
-				long endTime = System.currentTimeMillis();
+				double endTime = System.currentTimeMillis();
 				System.out.println("This program ran in " + (endTime- startTime)/1000 + " seconds.");
 				System.exit(0);
 			}
