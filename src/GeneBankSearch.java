@@ -43,12 +43,25 @@ public class GeneBankSearch{
 				query = new File(queryFileName);
 
 				//handling degree and sequence length ("xyz.gbk.btree.data.k.t") t is degree and k is seq length
-				degreeString += bTFileName.charAt(bTFileName.length()-1);
+//				degreeString += bTFileName.charAt(bTFileName.length()-1);
+//				degree = Integer.parseInt(degreeString);
+//				sequenceString += bTFileName.charAt(bTFileName.length()-3);
+//				sequence = Integer.parseInt(sequenceString);
+
+				//grab char in file name for degree
+				for(int i = bTFileName.length()-1; i >=0; i--){
+					if(bTFileName.charAt(i) != '.') degreeString += bTFileName.charAt(i);
+					else break;
+				}
+				for(int i = bTFileName.length()-degreeString.length() - 2; i >=0; i--){
+					if(bTFileName.charAt(i) != '.') sequenceString += bTFileName.charAt(i);
+					else break;
+				}
+				//reverse if there were more than one digits in either degree or sequence length
+				degreeString = reverse(degreeString);
+				sequenceString = reverse(sequenceString);
 				degree = Integer.parseInt(degreeString);
-				sequenceString += bTFileName.charAt(bTFileName.length()-3);
 				sequence = Integer.parseInt(sequenceString);
-
-
 //				//TODO testing RAM class 4/17/18
 //				String tempForPrint = "";
 //				String tempDataString = "G"; //0x00101101
@@ -102,5 +115,9 @@ public class GeneBankSearch{
 	public static void printUsage() {
 		System.out.println("Expected Format for arguments: <0/1(no/with Cache)> <btree file> <query file> [<cache size>] [<debug level>]");
 		System.exit(1);
+	}
+	public static String reverse(String x){
+		if (x.length() == 1) return x;
+		else return "" + x.charAt(x.length()-1) +  reverse(x.substring(0, x.length()-1));
 	}
 }

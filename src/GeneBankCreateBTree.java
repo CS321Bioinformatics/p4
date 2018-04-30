@@ -95,7 +95,8 @@ public class GeneBankCreateBTree {
 						//make tree object
 
 						try {
-							btree.BTreeInsert(btree, sequence);
+							//btree.BTreeInsert(btree, sequence);
+							btree.BTreeInsert(sequence);
 						} catch (IOException e) {
 							e.printStackTrace();
 						}

@@ -7,35 +7,51 @@ public class BTreeNode {
     //TODO A B-Tree node class
 	
 	//Metadata
-		//int n number of objects
 		//boolean leaf
+		//int n number of objects
 		//int location (byte location of nodes in file (offset of node in file))
-	public int numObjects;
+		//Size ----> 9 bytes
+
+	//without location --> 5 bytes
+
 	public boolean isLeaf;
-	public int nodeLocation;
-	public ArrayList<Long> children;
+	public int numKeys;
+	public int offset;
+
+	//other data
+		//parent pointer
+		//objects -- keyList
+		//child pointers -- children1 int list
+		//Size -----> 4(2t+1) + 12(2t-1) = 8t + 4 + 24t - 12 = 32t - 8
+
+	public int parent;
 	public ArrayList<TreeObject> keyList;
 	public ArrayList<Integer> children1;
-	public int parent, leftChild, rightChild, node;
-	public int numKeys;
 
 
-
-	public int offset;
+	/*unused items*/
+	//public int node;
+	//public int numKeys;
+	//public ArrayList<Long> children;
+	//public int offset;
 
 
 	//default (root)
 	public BTreeNode(){
-		int numObjects = 1;
-		nodeLocation = 0;
-		parent = 0;
+		//int numObjects = 1;
+
+
+		//parent = 0;
+
+		offset = 0;
+		parent = -1;
 		isLeaf = false;
 		keyList = new ArrayList<TreeObject>();
-//		children = new ArrayList<Long>();
 		children1 = new ArrayList<Integer>();
-		//leafList = new ArrayList<Long?>();
 
 
+//		children = new ArrayList<Long>();
+//		leafList = new ArrayList<Long?>();
 //		objectList.add(obj);
 		//how to get/set this nodes location
 		//new node location method in RAM class??
@@ -48,14 +64,16 @@ public class BTreeNode {
 	//if not root
 	public BTreeNode(Long obj, BTreeNode parentNode){
 		int numObjects = 1;
-		children = new ArrayList<Long>();
-		children1 = new ArrayList<Integer>();
+//		children = new ArrayList<Long>();
+
 //		children.add(obj);
+
+		children1 = new ArrayList<Integer>();
 		children1.add(obj.intValue());
 
 		//how to get/set this nodes location
 		//new node location method in RAM class??
-		nodeLocation = 0;
+		offset = 0;
 		parent = parentNode.getLocation();
 		
 		
@@ -70,11 +88,11 @@ public class BTreeNode {
 //	public Long getKey(int key){
 //		return children.get(key);
 //	}
-	public int getNode(){
-		return node;
-	}
+//	public BTreeNode getNode(){
+//		return node;
+//	}
 	public int getLocation() {
-		return nodeLocation;
+		return offset;
 	}
 
 	public int numKeys() {
@@ -117,4 +135,20 @@ public class BTreeNode {
 	}
 
 	public ArrayList<Integer> getKey(){return children1;}
+
+	public String toString(){
+		String nodeString = new String();
+		nodeString += "file offset: " + this.offset;
+		nodeString += "\nkeys: ";
+		for (int i = 0; i < keyList.size(); i++){
+			nodeString += (keyList.get(i).dnaString + " ");
+		}
+		nodeString += "\nchildren: ";
+		for (int i = 0; i < children1.size(); i++){
+			nodeString += (children1.get(i) + " ");
+		}
+
+		nodeString += "\nParent pointer: " + this.parent;
+		return nodeString;
+	}
 }
