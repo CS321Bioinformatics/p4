@@ -284,7 +284,7 @@ public class BTree {
             WriteNodeToFile(y, y.getOffset());
             z.setOffset(insertOffset);
             WriteNodeToFile(z, insertOffset);//at insertOffset
-            x.children1.add(i+1,z.getOffset());
+            x.children1.add(z.getOffset());
             WriteNodeToFile(x, x.getOffset());
             insertOffset+=nodeSize;
 
@@ -354,7 +354,8 @@ public class BTree {
             //DiskRead(newNode.children.get(i));
             BTreeNode child = null;
 
-            child = ReadNodeFromFile(rootNode.children1.get(i));
+            if(i == 0) child = ReadNodeFromFile(rootNode.children1.get(i));
+            else child = ReadNodeFromFile(rootNode.children1.get(i-1));
 
             if(child.numKeys == 2*degree-1){
 
@@ -365,7 +366,7 @@ public class BTree {
                 while(j > 0 && obj.compareTo(child.getKey(j-1)) < 0){
                     j--;
                 }
-                if(j > 0 && obj.compareTo(child.getKey(j)) == 0){
+                if(j > 0 && obj.compareTo(child.getKey(j-1)) == 0){
                     child.getKey(i).incrementFrequency();
                     WriteNodeToFile(child, child.getOffset());
                     return;
@@ -416,8 +417,8 @@ public class BTree {
                     raf.writeLong(0);
                 }
             }
-            if(childIndex == node.numKeys() && !node.isLeaf){
-                raf.writeInt(node.getChild(childIndex));
+            if(childIndex == node.children1.size() && !node.isLeaf){
+                raf.writeInt(node.children1.get(childIndex-1));
             }
         }catch(IOException e){
             e.printStackTrace();
@@ -575,7 +576,7 @@ public class BTree {
     //initialize bin file for btreecreate constructor
     public File BTreeFileCreate(String loadedGBK,int seqLength,int degree){
         try {
-            binFile = new File(loadedGBK+".btree."+seqLength+"."+degree);
+            binFile = new File(loadedGBK+".btree.data."+seqLength+"."+degree);
 //            writer = new PrintWriter(new FileWriter(loadedGBK+".btree."+seqLength+"."+degree, true),true);
 
             //writer.write("something");
@@ -589,23 +590,25 @@ public class BTree {
     //Needed to print when debug level is 0
     public void inOrderWriteFile(BTreeNode node,PrintWriter writer,int sequence){
         RAM ram = new RAM();
-        int i = 0;
+        //int i = 0;
         //int numNodes = (insertOffset -rootOffset/nodeSize);
-        while(i<node.numKeys()){
+        //while(i<node.numKeys()){
+        for(int i = 0; i < node.numKeys; i++){
             writer.print(ram.convertLongtoString(node.getKey(i).dnaString,sequence));
-            writer.append(": " + node.getKey(i).frequency);
-            i++;
+            writer.println(": " + node.getKey(i).frequency);
+            //i++;
         }
         if(!node.isLeaf){
-            while(i<node.numKeys()+1){
-                BTreeNode x = ReadNodeFromFile(node.getChild(i));
+            //while(i<node.numKeys()+1){
+            for(int j = 0; j < node.numKeys; j++){
+                BTreeNode x = ReadNodeFromFile(node.children1.get(j));
                 inOrderWriteFile(x, writer, sequence);
-                if(i < node.numKeys){
-                    writer.println(ram.convertLongtoString(node.getKey(i).dnaString,sequence));
-                    writer.append(": " + node.getKey(i).frequency);
+                if(j < node.numKeys()){
+                    writer.println(ram.convertLongtoString(node.getKey(j).dnaString,sequence));
+                    writer.println(": " + node.getKey(j).frequency);
                 }
             //inOrderWriteFile(root.keyList.get(i));
-                i++;
+                //i++;
             }
         }
     }
@@ -690,7 +693,7 @@ public class BTree {
         if(!node.isLeaf) {
             while (i < node.numKeys() + 1) {
                 BTreeNode x = ReadNodeFromFile(node.getChild(i));
-                inOrderWriteFile(x, writer, sequence);
+                inOrderFilePrint(x, writer, sequence);
                 if (i < node.numKeys) {
                     writer.print(ram.convertLongtoString(node.getKey(i).dnaString, sequence));
                     writer.println(": " + node.getKey(i).frequency);
