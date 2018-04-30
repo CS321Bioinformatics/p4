@@ -42,13 +42,9 @@ public class GeneBankSearch{
 				queryFileName = args[2];
 				query = new File(queryFileName);
 
-				//handling degree and sequence length ("xyz.gbk.btree.data.k.t") t is degree and k is seq length
-//				degreeString += bTFileName.charAt(bTFileName.length()-1);
-//				degree = Integer.parseInt(degreeString);
-//				sequenceString += bTFileName.charAt(bTFileName.length()-3);
-//				sequence = Integer.parseInt(sequenceString);
 
-				//grab char in file name for degree
+
+				//grab char in file name for degree and sequence
 				for(int i = bTFileName.length()-1; i >=0; i--){
 					if(bTFileName.charAt(i) != '.') degreeString += bTFileName.charAt(i);
 					else break;
@@ -62,9 +58,6 @@ public class GeneBankSearch{
 				sequenceString = reverse(sequenceString);
 				degree = Integer.parseInt(degreeString);
 				sequence = Integer.parseInt(sequenceString);
-//				//TODO testing RAM class 4/17/18
-//				String tempForPrint = "";
-//				String tempDataString = "G"; //0x00101101
 				RAM ram = new RAM();
 
 				BTree tree = new BTree(bTree, sequence, degree, cacheFlag, cacheSize);
@@ -89,14 +82,11 @@ public class GeneBankSearch{
 					TreeObject x = tree.BTreeSearch(tree.root, data);
 					if (x != null){
 						//writer.write(line + ":" + '\t' + x.frequency);
-						System.out.println(line + ":" + x.frequency);
+						System.out.println(line + ": " + x.frequency);
 					}
 
 				}
 
-//				if(debugLevel == 0){
-//					tree.inOrderWriteFile(writer, );
-//				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

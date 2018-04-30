@@ -554,10 +554,10 @@ public class BTree {
             i++;
         }
         //if ((i <= x.numKeys) && (key == x.keyList.get(i).dnaString))
-        if ((i < x.numKeys) && (y.compareTo(x.keyList.get(i))) ==0)
+        if ((i < x.numKeys) && (y.compareTo(x.keyList.get(i))) == 0)
                 return x.keyList.get(i);
-        //else if (!x.isLeaf) return null;
-        if (!x.isLeaf) return null;
+        else if (!x.isLeaf) return null;
+        //if (!x.isLeaf) return null;
         else return BTreeSearch(ReadNodeFromFile(x.children1.get(i)), key);
 
     }
