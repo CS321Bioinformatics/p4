@@ -2,12 +2,6 @@ package src;
 
 public class RAM {
 
-    //TODO Converts DNA substrings from file for GeneBankSearch driver
-
-    public long getKey() {
-        return key;
-    }
-
     private long key = 0;
 
 
@@ -18,7 +12,6 @@ public class RAM {
         input = input.toUpperCase();
         long key = 0x00000000;
         int tbits = 0b0;
-        int position = 0;
         char c;
         for(int i = 0; i<input.length(); i++){
             //convert String char to 0,1,2,3

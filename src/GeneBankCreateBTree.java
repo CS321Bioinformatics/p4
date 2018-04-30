@@ -8,12 +8,10 @@ import java.util.Scanner;
 
 
 public class GeneBankCreateBTree {
-	//TODO Driver class to create a BTree file from a given gbk file	
 	//args format: <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]
 	public static void main(String[] args) throws IOException {
 		int degree, seqLength = 0, cacheSize =0, debugLevel = 0;
 		boolean cacheFlag = false;
-		String gbkFileName;
 		File gbk = null;
 		Scanner lineScan, charScan;
 		String line = "", DNA = "";
@@ -22,12 +20,10 @@ public class GeneBankCreateBTree {
 		boolean readLine = false ;
 		RAM ram = new RAM();
 		BTree btree = null;
-		long startTime = System.currentTimeMillis();
-
 
 		if ((args.length == 0) || (args.length < 4 || args.length > 6)) { //verify correct amount of args
-			//printUsage();
-			//System.exit(1);
+			printUsage();
+			System.exit(1);
 		}else {
 			try {
 				if (args.length == 6) {
@@ -42,7 +38,6 @@ public class GeneBankCreateBTree {
 				seqLength = Integer.parseInt(args[3]);
 				gbk = new File(args[2]);
 
-				//BTreeNode tree = new BTreeNode();
 				btree = new BTree(seqLength, degree, gbk, cacheFlag, cacheSize);
 
 				//Parse File
@@ -78,64 +73,47 @@ public class GeneBankCreateBTree {
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
-				DNA = totalDNA.toString();
-				int index = 0;
-				while((index + seqLength) <= DNA.length()) {
-					String currString = DNA.substring(index,index + seqLength);
-					boolean isValid = true;
-					for(int i = 0; i < currString.length(); i++) {
-						if(currString.charAt(i) == 'n') {
-							isValid = false;
-						}
-					}
-					if (isValid) {
-						//convert currString to long
-						long sequence = ram.convertGBKtoSubseq(currString);
-//						btree.writeToFile(Long.toString(sequence),1); //TODO node instead of subseq
-						//make tree object
+                DNA = totalDNA.toString();
+                int index = 0;
+                while ((index + seqLength) <= DNA.length()) {
+                    String currString = DNA.substring(index, index + seqLength);
+                    boolean isValid = true;
+                    for (int i = 0; i < currString.length(); i++) {
+                        if (currString.charAt(i) == 'n') {
+                            isValid = false;
+                        }
+                    }
+                    if (isValid) {
+                        //convert currString to long
+                        long sequence = ram.convertGBKtoSubseq(currString);
+                        try {
+                            btree.BTreeInsert(sequence);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    index++;
+                }
 
-						try {
-							//btree.BTreeInsert(btree, sequence);
-							btree.BTreeInsert(sequence);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+                if (debugLevel == 1) {
+                    File dump = new File("data/dump1");
+                    dump.delete();
+                    dump.createNewFile();
+                    PrintWriter writer = new PrintWriter(dump);
+                    btree.inOrderWriteFile(btree.root, writer, seqLength);
+                    writer.close();
+                }
 
-
-						//search for object
-						//if found increment freq
-						//else insert
-						//either into and existing node or a new node
-					//System.out.println(currString);
-					}
-					index++;
-				}
-				//output dump or poop
-				if(debugLevel==0){
-					File dump = new File("data/dump1");
-					dump.delete();
-					dump.createNewFile();
-					PrintWriter writer = new PrintWriter(dump);
-					btree.inOrderWriteFile(btree.root,writer, seqLength);
-					writer.close();
-				}
-
-				if(cacheFlag){
-					btree.flushCache();
-				}
-				//System.out.println("done");
-				double endTime = System.currentTimeMillis();
-				System.out.println("This program ran in " + (endTime- startTime)/1000 + " seconds.");
-				System.exit(0);
-			}
-			
+                if (cacheFlag) {
+                    btree.flushCache();
+                }
+                System.exit(0);
+            }
 		}
-		
 	}
 
-}
-/*
-	public void printUsage() {
+	public static void printUsage() {
 		System.out.println("Expected Format for arguments: <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
 
-	}*/
+	}
+}

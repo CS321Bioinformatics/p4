@@ -1,25 +1,13 @@
-# p4
-
-Pertinent Information Regarding File Updates:
-
-*Created git repo                       3/29/18
-
-*created java files to test Git repo    3/29/18
-
-*added .gbk files                       3/29/18
-
 #Team Programming Project: Bioinformatics
-#CS321
-#Team: Ryley Studer, Jason Smith
-#Spring 2018
+*   CS321
+*   Team: Ryley Studer, Jason Smith
+*   Spring 2018
 
 Included files:
   BTree.java - Implementation of B-Tree specialized for this project
   BTreeCache.java - Cache used by BTree.java
   BTreeNode.java - Node class used by BTree.java
-  BTreeTest.java - Simple test for BTree.java
-  GeneBankConvert.java - Class to convert between String and long integer
-    representation of gene sequences
+  RAM.java - Class to convert between String and long integer representation of gene sequences
   GeneBankCreateBTree.java - Main class for GeneBankCreateBTree program; creates
     a BTree from a .gbk file
   GeneBankSearch.java - Main class for GeneBankSearch program; searches a BTree
@@ -82,17 +70,17 @@ Timing results:
 
   
   GeneBankSearch:
-    $ time java GeneBankSearch 0 data/test3.gbk.btree.data.7.128 queries/query7 > /dev/null
+    $ time java GeneBankSearch 0 data/test3.gbk.btree.data.7.127 queries/query7
     real        
     user        
     sys         
 
-    $ time java GeneBankSearch 1 data/test3.gbk.btree.data.7.128 queries/query7 100 > /dev/null
+    $ time java GeneBankSearch 1 data/test3.gbk.btree.data.7.127 queries/query7 100 
     real        
     user        
     sys         
 
-    $ time java GeneBankSearch 1 data/test3.gbk.btree.data.7.128 queries/query7 500 > asdf
+    $ time java GeneBankSearch 1 data/test3.gbk.btree.data.7.127 queries/query7 500
     real        
     user        
     sys         
@@ -101,17 +89,33 @@ Timing results:
 
 
 Explanation of the BTree file format:
-Index 0: BTree Metadata
-0: Degree int
-4: Node Size int
-8: Root Offset int
-Index 12: Location of First Node
-Node Metadata (5 bytes)
-12: isLeaf boolean (1 byte)
-13: number of objects int (4 bytes)
-Node contents
-17: parent offset int (4 bytes)
-21: TreeObject(1) (12 bytes per)
-DNAString long (8 bytes)
-Frequency int (4 bytes)
-33: child(1) pointer int (4 bytes per)
+*   Index 0: BTree Metadata
+*   0: Degree int
+*   4: Node Size int
+*   8: Root Offset int
+*   Index 12: Location of First Node
+*   Node Metadata (9 bytes)
+*   12: isLeaf boolean (1 byte)
+*   13: number of objects int (4 bytes)
+*   17: node offset
+*   Node contents
+*   21: parent offset int (4 bytes)
+*   25: TreeObject(1) (12 bytes per)
+*       DNAString long (8 bytes)
+*       Frequency int (4 bytes)
+*   37: child(1) pointer int (4 bytes per)
+
+We split the BTree up by first parsing the file in the CreateBTree driver class. This process needed
+a way to convert the data that we extracted from the GeneBank files. We passed this through a convert
+from string to long and created the BTree structure by using the next bit of data. Depending on how 
+large the specified sequence length, this was changed to accommodate the size of the sequence that we 
+use to write to the tree. After the BTree file was built, we worked on searching back through the file 
+and reading the contents back from the disk, the offset of these nodes was the challenge for this 
+section of our project. After we wrote out the diagrams of the BTree structure, we were able to 
+conceptualize this much more efficiently.
+
+In our second driver class we had to search back through the tree and compare our keys we saved to the 
+outputs of the correct query test-file that was provided. In this process, we were able to observe the 
+frequency of the node-data that the searchBTree returned. If a node showed up once, and had no 
+duplicates, it would have a frequency of 0, if it showed up again, we would increment that node.
+

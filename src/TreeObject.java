@@ -7,19 +7,10 @@ public class TreeObject {
 	//long - dna substring - data - comparable by key
 	//int frequency
 
-
-	//Linked List or ArrayList of tree objects
 	public long dnaString;
 	public int frequency;
-	//public boolean isLeaf;
 
-	public long getDnaString() {
-		return dnaString;
-	}
 
-	public int getFrequency() {
-		return frequency;
-	}
 
 	public void incrementFrequency() {
 		this.frequency++;
