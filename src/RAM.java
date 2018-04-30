@@ -50,20 +50,20 @@ public class RAM {
         String result = ""; //append to end
         long temp;
 
-        for(int i = 0; i<length; i++){ //get 2 bits from string
-            temp = key;
-            temp = (temp>>(2*i)); //normalize
-            temp &= 0x03; //isolate 2 bits, and clear padded 0's
-            if(temp == 00){ //A
+        for(int i = 1; i<=length; i++){ //get 2 bits from string
+            temp = input;
+            temp = (input & 0x3 <<(length-i )*2); //normalize
+            temp = temp >> (length-i)*2; //isolate 2 bits, and clear padded 0's
+            if(temp == 0){ //A
                 result+="a";
             }
-            else if(temp == 01){ //C
+            else if(temp == 1){ //C
                 result+="c";
             }
-            else if(temp == 11){ //T
+            else if(temp == 3){ //T
                 result+="t";
             }
-            else if(temp == 10){ //G
+            else if(temp == 2){ //G
                 result+="g";
             }
         }
