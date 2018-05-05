@@ -96,7 +96,7 @@ public class GeneBankCreateBTree {
                 }
 
                 if (debugLevel == 1) {
-                    File dump = new File("data/dump1");
+                    File dump = new File("dump");
                     dump.delete();
                     dump.createNewFile();
                     PrintWriter writer = new PrintWriter(dump);
