@@ -276,12 +276,14 @@ public class BTree {
                 DiskWrite(rootNode, rootNode.getOffset());
                 return;
             }
-            BTreeNode child = null;
+//            BTreeNode child = null;
+            int offset = rootNode.getChild(i);
+            BTreeNode child = ReadNodeFromFile(rootNode.getChild(i));
 
             if(i == 0) child = ReadNodeFromFile(rootNode.children1.get(i));
             else child = ReadNodeFromFile(rootNode.children1.get(i-1));
 
-            if(child.numKeys == 2*degree-1){
+            if(child.numKeys() == 2*degree-1){
 
                 int j = child.numKeys();
                 while(j > 0 && obj.compareTo(child.getKey(j-1)) < 0){
@@ -298,7 +300,9 @@ public class BTree {
                     }
                 }
             }
-            BTreeInsertNonFull(child,key);
+//            BTreeInsertNonFull(child,key);
+            BTreeNode y = ReadNodeFromFile(rootNode.getChild(i));
+            BTreeInsertNonFull(y, key);
         }
 
     }
