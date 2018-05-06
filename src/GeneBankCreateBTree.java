@@ -35,6 +35,10 @@ public class GeneBankCreateBTree {
 						cacheFlag = true;
 				else cacheFlag = false;
 				degree = Integer.parseInt(args[1]);
+				if(degree < 0 || degree > 31) {
+					printUsage();
+					System.exit(1);
+				}
 				seqLength = Integer.parseInt(args[3]);
 				gbk = new File(args[2]);
 
@@ -113,7 +117,7 @@ public class GeneBankCreateBTree {
 	}
 
 	public static void printUsage() {
-		System.out.println("Expected Format for arguments: <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
+		System.out.println("Expected Format for arguments: <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]\n" + "degree must be 1-31" );
 
 	}
 }

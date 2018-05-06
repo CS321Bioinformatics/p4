@@ -106,6 +106,8 @@ public class BTree {
         BTreeNode z = new BTreeNode();
         z.isLeaf = y.isLeaf;
         z.setParent(y.getParent());
+        z.setNumKeys(degree-1);
+        //x.children1.add(i, y.getOffset());
         for (int j = 0; j < degree - 1; j++){
             z.keyList.add(y.keyList.remove(degree));
             z.numKeys++;
@@ -116,15 +118,25 @@ public class BTree {
                 z.children1.add(y.children1.remove(degree));
             }
         }
+        //move middle key up to parent
         if(x.numKeys() == 0) x.keyList.add((y.keyList.remove(degree-1)));
-        else x.keyList.add(i,(y.keyList.remove(degree-1)));
+        else{
+
+            TreeObject obj = (y.getKey(degree-1));
+            int j = x.numKeys();
+            while (j > 0 && obj.compareTo(x.getKey(j-1)) < 0){
+                j--;
+            }
+            x.keyList.add(j,(y.keyList.remove(degree-1)));
+
+        }
         x.numKeys++;
         y.numKeys--;
         if(x == root && x.numKeys == 1){
             DiskWrite(y, insertOffset);//at insertOffset
             insertOffset+=nodeSize;
             z.setOffset(insertOffset);
-            x.children1.add(z.getOffset());
+            x.children1.add(i +1, z.getOffset());
             DiskWrite(z, insertOffset);//at insertOffset
             DiskWrite(x, rootOffset);//at root offset
 
@@ -373,38 +385,39 @@ public class BTree {
 //        }
 //    }
     //raf write node to a specific offset in binary file
-    private void WriteNodeToFile(BTreeNode node, int offset) {
-        int childIndex=0;
-        try {
-            raf.seek(offset);
-            //write node meta
-            raf.writeBoolean(node.isLeaf);
-            raf.writeInt(node.numKeys());
-            raf.writeInt(node.offset);
-            //write other data
-            raf.writeInt(node.parent);
-            for (childIndex = 0; childIndex < 2 * degree - 1; childIndex++) {
-                if(childIndex < node.numKeys()  && !node.isLeaf){
-                    raf.writeInt(node.children1.get(childIndex));
-                }else if(childIndex >= node.numKeys() + 1 || node.isLeaf){
-                    raf.seek(raf.getFilePointer() + 4);
-                }
-                if(childIndex < node.numKeys()) {
-                    raf.writeLong(node.keyList.get(childIndex).dnaString);
-                    raf.writeInt(node.keyList.get(childIndex).frequency);
-                }
-                else if(childIndex >= node.numKeys() || node.isLeaf){
-                    raf.writeLong(0);
-                }
-            }
-            if(childIndex == node.children1.size() && !node.isLeaf){
-                raf.writeInt(node.children1.get(childIndex-1));
-            }
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-    }
-
+//    private void WriteNodeToFile(BTreeNode node, int offset) {
+//        int childIndex=0;
+//        try {
+//            raf.seek(offset);
+//            //write node meta
+//            raf.writeBoolean(node.isLeaf);
+//            raf.writeInt(node.numKeys());
+//            raf.writeInt(node.offset);
+//            //write other data
+//            raf.writeInt(node.parent);
+//            for (childIndex = 0; childIndex < 2 * degree - 1; childIndex++) {
+//                if(childIndex < node.numKeys()  && !node.isLeaf){
+//                    raf.writeInt(node.getChild(childIndex));
+//                }else if(childIndex >= node.numKeys() + 1 || node.isLeaf){
+//                    //raf.seek(raf.getFilePointer() + 4);
+//                    raf.writeInt(0);
+//                }
+//                if(childIndex < node.numKeys()) {
+//                    raf.writeLong(node.keyList.get(childIndex).dnaString);
+//                    raf.writeInt(node.keyList.get(childIndex).frequency);
+//                }
+//                else if(childIndex >= node.numKeys() || node.isLeaf){
+//                    raf.writeLong(0);
+//                }
+//            }
+//            if(childIndex == node.children1.size() && !node.isLeaf){
+//                raf.writeInt(node.children1.get(childIndex-1));
+//            }
+//        }catch(IOException e){
+//            e.printStackTrace();
+//        }
+//    }
+//
     //default raf write, writes tree metadata
     private void WriteTreeMetaData(){//TODO position | Byte array and
         try{
@@ -418,38 +431,38 @@ public class BTree {
         }
 
     }
-//    private void WriteNodeToFile(BTreeNode node, int offset) {
-//        int childIndex=0;
-//        try {
-//            raf.seek(offset);
-//            //write node meta
-//            raf.writeBoolean(node.isLeaf);
-//            raf.writeInt(node.numKeys());
-////            raf.writeInt(node.offset);
-//            //write other data
-//            raf.writeInt(node.getParent());
-//            for (childIndex = 0; childIndex < 2 * degree - 1; childIndex++) {
-//                if(childIndex < node.numKeys()  && !node.isLeaf){
-//                    raf.writeInt(node.getChild(childIndex));
-//                }else if(childIndex >= node.numKeys() + 1 || node.isLeaf){
-////                    raf.seek(raf.getFilePointer() + 4);
-//                    raf.writeInt(0);
-//                }
-//                if(childIndex < node.numKeys()) {
-//                    raf.writeLong(node.getKey(childIndex).getDnaString());
-//                    raf.writeInt(node.getKey(childIndex).getFrequency());
-//                }
-//                else if(childIndex >= node.numKeys() || node.isLeaf){
-//                    raf.writeLong(0);
-//                }
-//            }
-//            if(childIndex == node.numKeys() && !node.isLeaf){
-//                raf.writeInt(node.getChild(childIndex));
-//            }
-//        }catch(IOException e){
-//            e.printStackTrace();
-//        }
-//    }
+    private void WriteNodeToFile(BTreeNode node, int offset) {
+        int childIndex=0;
+        try {
+            raf.seek(offset);
+            //write node meta
+            raf.writeBoolean(node.isLeaf);
+            raf.writeInt(node.numKeys());
+            raf.writeInt(node.getOffset());
+            //write other data
+            raf.writeInt(node.getParent());
+            for (childIndex = 0; childIndex < 2 * degree - 1; childIndex++) {
+                if(childIndex < node.numKeys()  && !node.isLeaf){
+                    raf.writeInt(node.getChild(childIndex));
+                }else if(childIndex >= node.numKeys() + 1 || node.isLeaf){
+//                    raf.seek(raf.getFilePointer() + 4);
+                    raf.writeInt(0);
+                }
+                if(childIndex < node.numKeys()) {
+                    raf.writeLong(node.getKey(childIndex).getDnaString());
+                    raf.writeInt(node.getKey(childIndex).getFrequency());
+                }
+                else if(childIndex >= node.numKeys() || node.isLeaf){
+                    raf.writeLong(0);
+                }
+            }
+            if(childIndex == node.numKeys()-1 && !node.isLeaf){
+                raf.writeInt(node.getChild(childIndex));
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
     //default raf grab tree metadata from front of bin file
     private void ReadTreeMetaData() {
         try {
@@ -503,7 +516,7 @@ public class BTree {
             //node metadata
             x.isLeaf = raf.readBoolean();   //1 byte
             x.setNumKeys(raf.readInt());    //4 bytes
-            x.offset = raf.readInt();
+            x.offset = raf.readInt();       //4 bytes
             //rest of data
             x.parent = raf.readInt();       //4 bytes
             for (childIndex = 0; childIndex < 2 * degree - 1; childIndex++) {
@@ -534,14 +547,14 @@ public class BTree {
 
     //gbsearch driver searches btree for sequence
     public TreeObject BTreeSearch(BTreeNode x, long key){
-        int i = 1;
+        int i = 0;
         TreeObject y = new TreeObject(key);
-        while ((i < x.numKeys) && (y.compareTo(x.keyList.get(i))) > 0){
+        while ((i < x.numKeys()) && (y.compareTo(x.getKey(i))) > 0){
             i++;
         }
-        if ((i < x.numKeys) && (y.compareTo(x.keyList.get(i))) == 0) return x.keyList.get(i);
+        if ((i < x.numKeys()) && (y.compareTo(x.getKey(i))) == 0) return x.getKey(i);
         else if (!x.isLeaf) return null;
-        else return BTreeSearch(ReadNodeFromFile(x.children1.get(i)), key);
+        else return BTreeSearch(ReadNodeFromFile(x.getChild(i)), key);
 
     }
 

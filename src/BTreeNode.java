@@ -203,16 +203,16 @@ public class BTreeNode {
 	public String toString(){
 		String nodeString = new String();
 		nodeString += "file offset: " + this.offset;
-		nodeString += "\nkeys: ";
+		nodeString += "  keys: ";
 		for (int i = 0; i < keyList.size(); i++){
 			nodeString += (keyList.get(i).dnaString + " ");
 		}
-		nodeString += "\nchildren: ";
+		nodeString += "  children: ";
 		for (int i = 0; i < children1.size(); i++){
 			nodeString += (children1.get(i) + " ");
 		}
 
-		nodeString += "\nParent pointer: " + this.parent;
+		nodeString += "  Parent pointer: " + this.parent;
 		return nodeString;
 	}
 }

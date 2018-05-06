@@ -97,7 +97,7 @@ Explanation of the BTree file format:
 *   Node Metadata (9 bytes)
 *   12: isLeaf boolean (1 byte)
 *   13: number of objects int (4 bytes)
-*   17: node offset
+*   17: node offset (4 bytes)
 *   Node contents
 *   21: parent offset int (4 bytes)
 *   25: TreeObject(1) (12 bytes per)
@@ -119,3 +119,7 @@ outputs of the correct query test-file that was provided. In this process, we we
 frequency of the node-data that the searchBTree returned. If a node showed up once, and had no 
 duplicates, it would have a frequency of 0, if it showed up again, we would increment that node.
 
+
+Known Issues:
+Our GeneBankCreateBTree driver does compile and will produce a btree binary file, as well as a dump of the 
+TreeObjects in the BTree and their frequencies. Our GeneBankBTreeSearch driver will compile and 
