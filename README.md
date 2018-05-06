@@ -53,34 +53,34 @@ Compiling and running:
 
 Timing results:
    GeneBankCreateBTree:
-    $ time java GeneBankCreateBTree 0 0 data/test3.gbk 7
+    $ time java GeneBankCreateBTree 0 0 test3.gbk 7
     real        
     user        20.399
     sys         
 
-    $ time java GeneBankCreateBTree 1 0 data/test3.gbk 7 100
+    $ time java GeneBankCreateBTree 1 0 test3.gbk 7 100
     real        
     user        20.387
     sys         
 
-    $ time java GeneBankCreateBTree 1 0 data/test3.gbk 7 500
+    $ time java GeneBankCreateBTree 1 0 test3.gbk 7 500
     real        
     user        20.328
     sys         
 
   
   GeneBankSearch:
-    $ time java GeneBankSearch 0 data/test3.gbk.btree.data.7.127 queries/query7
+    $ time java GeneBankSearch 0 test3.gbk.btree.data.7.127 queries/query7
     real        
     user        
     sys         
 
-    $ time java GeneBankSearch 1 data/test3.gbk.btree.data.7.127 queries/query7 100 
+    $ time java GeneBankSearch 1 test3.gbk.btree.data.7.127 queries/query7 100 
     real        
     user        
     sys         
 
-    $ time java GeneBankSearch 1 data/test3.gbk.btree.data.7.127 queries/query7 500
+    $ time java GeneBankSearch 1 test3.gbk.btree.data.7.127 queries/query7 500
     real        
     user        
     sys         
@@ -121,5 +121,7 @@ duplicates, it would have a frequency of 0, if it showed up again, we would incr
 
 
 Known Issues:
-Our GeneBankCreateBTree driver does compile and will produce a btree binary file, as well as a dump of the 
-TreeObjects in the BTree and their frequencies. Our GeneBankBTreeSearch driver will compile and 
+Our GeneBankCreateBTree driver does compile (with cache option) and will produce a btree binary file, as well as a dump 
+of the TreeObjects in the BTree and their frequencies. Our GeneBankBTreeSearch driver will compile (with cache option) 
+as well. We are aware that our GeneBankBTreeSearch output is incorrect. We have not been able to locate the source of 
+the issue.  
